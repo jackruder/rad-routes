@@ -6,7 +6,7 @@ npm run build
 
 # put built front-end into the django app
 cd ..
-mv ./front/build ./server/radroutes/front-build/
+mv ./front/build ./server/front-build/
 
 # push changes to the repo
 git add .
