@@ -18,10 +18,10 @@ then
     mv ./front/build ./server/front-build
 
     MESSAGE="Updated front-build: "
-    MESSSAGE+=$COMMIT_MESSAGE
+    MESSAGE+=$COMMIT_MESSAGE
 
     # push changes to the repo
     git add .
-    git commit -m MESSAGE
+    git commit -m "$MESSAGE"
     git push origin master
 fi
