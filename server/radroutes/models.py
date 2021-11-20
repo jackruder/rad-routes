@@ -70,6 +70,8 @@ class Book(models.Model):
     book_name = models.TextField(max_length=NAME_MAX_LENGTH)
     book_description = models.TextField(null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH)
     author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    public = models.BooleanField()
+    listed = models.BooleanField()
 
 class BookArea(models.Model):
     area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
