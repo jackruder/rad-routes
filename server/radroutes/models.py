@@ -18,7 +18,7 @@ def validate_positive(value):
         )
 
 def validate_star_rating(value):
-    if value not in [1,2,3,4,5]:
+    if value not in [0,1,2,3,4,5]:
         raise ValidationError(
             f"{value} is not an integer between 1 and 5 inclusive",
             params={'value': value}
@@ -60,7 +60,8 @@ class Climb(models.Model):
     climb_type = models.TextField(null=True, blank=True, max_length=50)
     face_id = models.ForeignKey(Face, null=True, blank=True, on_delete=models.CASCADE)
     grade = models.TextField(null=True, blank=True, max_length=20)
-    quality = models.FloatField(null=True, blank=True, validators=[validate_star_rating])
+    quality = models.IntegerField(null=True, blank=True, validators=[validate_star_rating])
+    quality_max = models.IntegerField(null=True, blank=True, validators=[validate_star_rating])
     height = models.FloatField(null=True, blank=True, validators=[validate_positive])
     description = models.TextField(null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH) # descriptions might be pretty long. We can determine more precise enforcement at the api layer
 
@@ -76,6 +77,13 @@ class BookArea(models.Model):
 
     class Meta:
         unique_together = (('area_id', 'book_id'),)
+
+class UserPrivateAccess(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    book_id = models.ForeignKey(Book, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        unique_together = (('user_id', 'book_id'),)
 
 class UserLibrary(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
