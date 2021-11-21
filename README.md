@@ -10,7 +10,7 @@ git clone https://github.com/apc518/rad-routes.git
 cd rad-routes
 sudo chmod +rwx buildfront.bash
 cd front
-npm install
+npm ci
 ```
 
 Open up two terminals, one for the front and one for the server.
