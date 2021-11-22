@@ -10,14 +10,10 @@ import os
 def load_dotenv(path):
     lines = []
     with open(f"{path}/.env", "r") as f:
-        lines = f.read().split("\n")
-    
-    # split each line up by spaces (if there are no spaces it will still put the value into a length-1 list)
-    for i, line in enumerate(lines):
-        lines[i] = line.split(" ")
-
+        # lines = f.read().split("\n")
+        lines = f.readlines()
+        
     # put each item into os.environ    
     for line in lines:
-        for item in line:
-            name, value = item.split("=")
-            os.environ[name] = value
+        name, value = line.split("=")
+        os.environ[name] = value
