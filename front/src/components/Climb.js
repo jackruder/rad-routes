@@ -1,23 +1,6 @@
 import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 
-import UnitDropdown from './UnitDropdown';
-import { RouteDifficulty, BoulderDifficulty } from '../objects/Units';
-
-const getDifficulty = (grade, gradeUnit) => {
-  // bounds checking: grade must be in [0, 1)
-  // grade must be less than 1 (not equal to 1)
-  if (grade < 0){
-    grade = 0;
-  }
-  else if (grade >= 1){
-    grade = 0.99;
-  }
-
-  // take the value that is 100*grade percent of the way through the relevant list
-  return gradeUnit.values[Math.floor(grade * gradeUnit.values.length)]
-}
-
 const getHeightString  = (height) => {
   const ft = `${Math.round(height * 3.28084)}ft`;
   const m = `${height}m`
@@ -31,12 +14,10 @@ const getHeightString  = (height) => {
 
 const types = {
   ropedClimb: {
-    name: "Roped Climb",
-    defaultUnit: RouteDifficulty.yosemite
+    name: "Roped Climb"
   },
   boulder: {
-    name: "Boulder",
-    defaultUnit: BoulderDifficulty.vScale
+    name: "Boulder"
   }
 }
 
@@ -45,36 +26,20 @@ export default function Climb() {
   // eslint-disable-next-line
   const [type, setType] = useState(types.ropedClimb);
   // eslint-disable-next-line
-  const [grade, setGrade] = useState(0.7);
-  const [gradeUnit, setGradeUnit] = useState(type.defaultUnit);
-  const [gradeString, setGradeString] = useState(getDifficulty(grade, gradeUnit))
-
+  const [grade, setGrade] = useState("5.11c / V7 / 5.10a");
   // eslint-disable-next-line
   const [height, setHeight] = useState(35);
 
   return (
     <Card
       style={{ width: '36rem', margin: 10 }}
-      
     >
       <div style={{display: 'flex'}}>
         <Card.Body>
           <Card.Title>Cool Climb</Card.Title>
           Type: <b>{type.name}</b> <br/> {/* roped climb vs boulder */}
+          Grade: <b>{grade}</b> <br/>
 
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <div style={{flexGrow: 1}}>Grade: <b>{gradeString}</b></div>
-            <UnitDropdown
-              label="Grading System"
-              unitList={Object.values(type === types.boulder ? BoulderDifficulty : RouteDifficulty)}
-              onSelect={(unitVarName) => {
-                const newUnit = (type === types.boulder ? BoulderDifficulty : RouteDifficulty)[unitVarName]
-                setGradeUnit(newUnit);
-                setGradeString(getDifficulty(grade, newUnit)); // gradeUnit doesnt seem to actually update in time for this to work with getDifficulty(grade, gradeUnit)
-              }}
-            />
-          </div>
-          
           {type === types.ropedClimb || true ? 
             <div style={{flexGrow: 1}}>Height: <b>{getHeightString(height)}</b></div> :
             <></>}
