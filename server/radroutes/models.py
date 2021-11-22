@@ -33,13 +33,13 @@ class User(models.Model):
     is_guide = models.BooleanField()
 
 class Area(models.Model):
-    area_id = models.IntegerField(primary_key=True)
+    area_id = models.AutoField(primary_key=True)
     area_name = models.TextField(max_length=TITLE_MAX_LENGTH)
     area_quality = models.FloatField(null=True, blank=True)
     area_description = models.TextField(null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH)
 
 class Feature(models.Model):
-    feature_id = models.IntegerField(primary_key=True)
+    feature_id = models.AutoField(primary_key=True)
     feature_name = models.TextField(max_length=TITLE_MAX_LENGTH)
     feature_description = models.TextField(max_length=DESCRIPTION_MAX_LENGTH)
     gps = models.TextField(null=True, blank=True, max_length=50)
@@ -47,14 +47,14 @@ class Feature(models.Model):
     area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
 
 class Face(models.Model):
-    face_id = models.IntegerField(primary_key=True)
+    face_id = models.AutoField(primary_key=True)
     face_name = models.TextField(max_length=NAME_MAX_LENGTH)
     face_description = models.TextField(null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH)
     feature_id = models.ForeignKey(Feature, on_delete=models.CASCADE)
     image = models.ImageField(null=True, blank=True) # PILLOW needs to be installed for this to work
 
 class Climb(models.Model):
-    climb_id = models.IntegerField(primary_key=True)
+    climb_id = models.AutoField(primary_key=True)
     author_email = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     climb_name = models.TextField(max_length=NAME_MAX_LENGTH) # max length is a concern for exploitation not formatting, so the number is fairly high
     climb_type = models.TextField(null=True, blank=True, max_length=50)
@@ -66,7 +66,7 @@ class Climb(models.Model):
     description = models.TextField(null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH) # descriptions might be pretty long. We can determine more precise enforcement at the api layer
 
 class Book(models.Model):
-    book_id = models.IntegerField(primary_key=True)
+    book_id = models.AutoField(primary_key=True)
     book_name = models.TextField(max_length=NAME_MAX_LENGTH)
     book_description = models.TextField(null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH)
     author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
