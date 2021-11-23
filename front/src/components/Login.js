@@ -24,6 +24,13 @@ export default function Login(){
                         <Form.Control type="password" placeholder="Enter password" />
                     </Form.Group>
 
+                    <Form.Check 
+                        type={'checkbox'}
+                        id={`remember`}
+                        label={`Keep me signed in on this computer.`}
+                    />
+                    <br />
+
                     <Button variant="primary" type="submit">
                         Login
                     </Button>
