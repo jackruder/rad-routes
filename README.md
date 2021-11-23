@@ -15,9 +15,15 @@ npm ci
 
 Open up two terminals, one for the front and one for the server.
 
+You will need a `.env` file inside `backend/`. This file should have a `SECRET_KEY` variable defined:
+
+```
+SECRET_KEY=foo-bar-123!@#
+```
+
 Start the development server:
 ```
-cd server
+cd backend
 python manage.py runserver
 ```
 
