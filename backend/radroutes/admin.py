@@ -9,6 +9,7 @@ from .models import (
     BookReview,
     UserLibrary,
     UserPrivateAccess,
+    Feature
 )
 
 # Register your models here.
@@ -21,3 +22,4 @@ admin.site.register(Climb)
 admin.site.register(BookReview)
 admin.site.register(UserLibrary)
 admin.site.register(UserPrivateAccess)
+admin.site.register(Feature)
