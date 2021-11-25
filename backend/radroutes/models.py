@@ -54,7 +54,9 @@ class Feature(models.Model):
     feature_name = models.TextField(max_length=TITLE_MAX_LENGTH)
     feature_description = models.TextField(max_length=DESCRIPTION_MAX_LENGTH)
     gps = models.TextField(null=True, blank=True, max_length=50)
-    location = models.TextField(null=True, blank=True, max_length=TITLE_MAX_LENGTH)
+    location = models.TextField(
+        null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
+    )
     area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -88,9 +90,7 @@ class Climb(models.Model):
     quality = models.IntegerField(
         null=True, blank=True, validators=[validate_star_rating]
     )
-    quality_max = models.IntegerField(
-        null=True, blank=True, validators=[validate_star_rating]
-    )
+
     height = models.FloatField(null=True, blank=True, validators=[validate_positive])
     description = models.TextField(
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
@@ -109,6 +109,9 @@ class Book(models.Model):
     author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     public = models.BooleanField()
     listed = models.BooleanField()
+    quality_max = models.IntegerField(  # Same scale should be used throughout book
+        null=True, blank=True, validators=[validate_star_rating]
+    )
 
     def __str__(self):
         return "%s" % (self.book_name)
