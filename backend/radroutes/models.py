@@ -37,6 +37,23 @@ class User(models.Model):
         return "%s" % (self.email)
 
 
+class Book(models.Model):
+    book_id = models.AutoField(primary_key=True)
+    book_name = models.TextField(max_length=NAME_MAX_LENGTH)
+    book_description = models.TextField(
+        null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
+    )
+    author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    public = models.BooleanField()
+    listed = models.BooleanField()
+    quality_max = models.IntegerField(  # Same scale should be used throughout book
+        null=True, blank=True, validators=[validate_star_rating]
+    )
+
+    def __str__(self):
+        return "%s" % (self.book_name)
+
+
 class Area(models.Model):
     area_id = models.AutoField(primary_key=True)
     area_name = models.TextField(max_length=TITLE_MAX_LENGTH)
@@ -44,6 +61,7 @@ class Area(models.Model):
     area_description = models.TextField(
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
     )
+    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s" % (self.area_name)
@@ -98,23 +116,6 @@ class Climb(models.Model):
 
     def __str__(self):
         return "%s" % (self.climb_name)
-
-
-class Book(models.Model):
-    book_id = models.AutoField(primary_key=True)
-    book_name = models.TextField(max_length=NAME_MAX_LENGTH)
-    book_description = models.TextField(
-        null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
-    )
-    author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    public = models.BooleanField()
-    listed = models.BooleanField()
-    quality_max = models.IntegerField(  # Same scale should be used throughout book
-        null=True, blank=True, validators=[validate_star_rating]
-    )
-
-    def __str__(self):
-        return "%s" % (self.book_name)
 
 
 class UserPrivateAccess(models.Model):
