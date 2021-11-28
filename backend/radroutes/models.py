@@ -146,7 +146,7 @@ class BookReview(models.Model):
     rating = models.IntegerField(validators=[validate_star_rating])
 
     def __str__(self):
-        return "%s: %s" % (self.reviewer.name, self.book_id.name)
+        return f"{self.reviewer.fname} {self.reviewer.lname} ({self.reviewer.email}): {self.book_id.book_name}"
 
     class Meta:
         unique_together = (("reviewer", "book_id"),)
