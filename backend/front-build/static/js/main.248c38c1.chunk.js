@@ -1,2 +1,0 @@
-(this["webpackJsonpradroutes-front"]=this["webpackJsonpradroutes-front"]||[]).push([[0],{11:function(e,t,n){"use strict";n.r(t);var r=n(1),c=n.n(r),o=n(3),s=n.n(o),i=(n(8),n(9),n(0));var a=function(){return Object(i.jsx)("div",{className:"App",children:Object(i.jsx)("h2",{children:"Imagine Some Rad Routes"})})};s.a.render(Object(i.jsx)(c.a.StrictMode,{children:Object(i.jsx)(a,{})}),document.getElementById("root"))},8:function(e,t,n){},9:function(e,t,n){}},[[11,1,2]]]);
-//# sourceMappingURL=main.248c38c1.chunk.js.map
