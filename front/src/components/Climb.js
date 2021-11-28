@@ -53,7 +53,7 @@ export default function Climb() {
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quo ad saepe sit alias ab molestias consectetur esse magnam tempora neque.
           </Card.Text>
         </Card.Body>
-        <Card.Img variant="top" src="/test-assets/rock-climbing.jpeg" style={{ overflow: 'hidden', height: '100%' }} />
+        <Card.Img variant="top" src="/static/assets/rock-climbing.jpeg" style={{ overflow: 'hidden', height: '100%' }} />
       </div>
       <Card.Body>
           <Card.Title>Getting There</Card.Title>
