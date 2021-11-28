@@ -11,6 +11,6 @@ then
 
     # put built front-end into the django app
     cd ..
-    rm -rf ./server/front-build
-    mv ./front/build ./server/front-build
+    rm -rf ./backend/front-build
+    mv ./front/build ./backend/front-build
 fi
