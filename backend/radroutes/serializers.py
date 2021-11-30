@@ -62,3 +62,15 @@ class BookSerializer(serializers.ModelSerializer):
             "quality_max",
             "grade_hist",
         )
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("email", "fname", "lname", "is_guide")
+
+
+class BookReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BookReview
+        fields = ("book_id", "review_body", "rating")

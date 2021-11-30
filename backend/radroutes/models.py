@@ -49,7 +49,7 @@ class Book(models.Model):
     quality_max = models.IntegerField(  # Same scale should be used throughout book
         null=True, blank=True, validators=[validate_star_rating]
     )
-
+    grade_hist = models.TextField() # comma delimited x-axis values to use for grades
     def __str__(self):
         return "%s" % (self.book_name)
 
