@@ -10,7 +10,7 @@ from .models import Climb, User, Book, Face, Area, UserLibrary, BookReview, Feat
 # Create your views here.
 
 
-class CreateListClimbs(ListCreateAPIView):
+class CreateListAllClimbs(ListCreateAPIView):
     """
     adds the ability to list and create climb
     """
@@ -19,7 +19,7 @@ class CreateListClimbs(ListCreateAPIView):
     queryset = Climb.objects.all()
 
 
-class RetrieveUpdateDestroyClimb(RetrieveUpdateDestroyAPIView):
+class RetrieveUpdateDestroyAllClimb(RetrieveUpdateDestroyAPIView):
     """
     access a single climb, or update or destroy
     """

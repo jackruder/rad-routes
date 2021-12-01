@@ -1,8 +1,8 @@
-from django.urls import include, path
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    path('climbs', views.ListAreaClimbs),
-    path('climb/<pk>', views.RetrieveUpdateDestroyClimb)
+    path("climbs/", views.CreateListAllClimbs.as_view()),
+    path("climb/<pk>", views.RetrieveUpdateDestroyAllClimb.as_view()),
 ]
