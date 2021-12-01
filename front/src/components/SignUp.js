@@ -5,11 +5,8 @@ import Button from 'react-bootstrap/Button';
 
 export default function SignUp(){
     return(
-        <Card
-            style={{   margin: 'auto', top: '50px', width: '25%' }}
-        >
-        
-            <div style={{display: 'flex'}}>
+        <Card style = {{ margin: 'auto', top: '50px', width: '25%' }}>
+            <div style = {{ display: 'flex' }}>
             <Card.Body>
                 <Card.Title>Sign Up</Card.Title>
                 <Form>
