@@ -32,7 +32,21 @@ class ListAreaClimbsById(GenericAPIView, mixins.ListModelMixin):
     """retrieve all climbs in an area by the areaID"""
 
     def get_queryset(self):
-        return Climb.objects.filter(area_id=self.request.data["area_id"])
+        return Climb.objects.filter(
+            face_id__feature_id__area_id=self.request.data.get("area_id")
+        )
+
+    serializer_class = ClimbSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class ListFaceClimbsById(GenericAPIView, mixins.ListModelMixin):
+    """retrieve all climbs in an area by the areaID"""
+
+    def get_queryset(self):
+        return Climb.objects.filter(face_id=self.request.data.get("face_id"))
 
     serializer_class = ClimbSerializer
 
