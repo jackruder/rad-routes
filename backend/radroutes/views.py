@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.generics import GenericAPIView
-from rest_framework.views import APIView
+from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from .serializers import ClimbSerializer
@@ -23,14 +23,18 @@ class RetrieveUpdateDestroyAllClimb(RetrieveUpdateDestroyAPIView):
     """
     access a single climb, or update or destroy
     """
+
     serializer_class = ClimbSerializer
     queryset = Climb.objects.all()
 
 
-class ListAreaClimbs(APIView):
-    """retrieve all climbs in an area"""
+class ListAreaClimbsById(GenericAPIView, mixins.ListModelMixin):
+    """retrieve all climbs in an area by the areaID"""
 
-    def get(self, request):
-        climbs = Climb.objects.filter(area_id=request.data["area_id"])
-        serializer = ClimbSerializer(climbs, many=True)
-        return Response(serializer.data)
+    def get_queryset(self):
+        return Climb.objects.filter(area_id=self.request.data["area_id"])
+
+    serializer_class = ClimbSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)

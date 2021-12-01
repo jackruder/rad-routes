@@ -1,8 +1,13 @@
 from django.urls import path
 
-from . import views
+from .views import (
+    CreateListAllClimbs,
+    RetrieveUpdateDestroyAllClimb,
+    ListAreaClimbsById,
+)
 
 urlpatterns = [
-    path("climbs/", views.CreateListAllClimbs.as_view()),
-    path("climb/<pk>", views.RetrieveUpdateDestroyAllClimb.as_view()),
+    path("climbs/", CreateListAllClimbs.as_view()),
+    path("climb/<int:pk>/", RetrieveUpdateDestroyAllClimb.as_view()),
+    path("<int:area_id>/climbs/", ListAreaClimbsById.as_view())
 ]
