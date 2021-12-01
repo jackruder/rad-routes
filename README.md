@@ -3,12 +3,16 @@
 Routes, but they're rad.
 
 ### Development Setup
-You must have django installed. Do so with `pip install django`
-
-```
+```sh
 git clone https://github.com/apc518/rad-routes.git
 cd rad-routes
 sudo chmod +rwx buildfront.bash
+
+# install python dependencies
+python -m venv env
+pip install -r requirements.txt
+
+# install node dependencies
 cd front
 npm ci
 ```
@@ -22,13 +26,13 @@ SECRET_KEY=foo-bar-123!@#
 ```
 
 Start the development server:
-```
+```sh
 cd backend
 python manage.py runserver
 ```
 
 Start the development client:
-```
+```sh
 cd front
 npm start
 ```
