@@ -28,25 +28,49 @@ class RetrieveUpdateDestroyAllClimb(RetrieveUpdateDestroyAPIView):
     queryset = Climb.objects.all()
 
 
+class ListFeatureClimbsById(GenericAPIView, mixins.ListModelMixin):
+    """retrieve all climbs in an area by the areaID"""
+
+    def get_queryset(self):
+        return Climb.objects.filter(face_id__feature_id=self.kwargs["feature_id"])
+
+    serializer_class = ClimbSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
 class ListAreaClimbsById(GenericAPIView, mixins.ListModelMixin):
     """retrieve all climbs in an area by the areaID"""
 
     def get_queryset(self):
-        return Climb.objects.filter(
-            face_id__feature_id__area_id=self.request.data.get("area_id")
-        )
+        return Climb.objects.filter(face_id__feature_id__area_id=self.kwargs["area_id"])
 
     serializer_class = ClimbSerializer
 
-    def post(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
 
 class ListFaceClimbsById(GenericAPIView, mixins.ListModelMixin):
-    """retrieve all climbs in an area by the areaID"""
+    """retrieve all climbs on a face by the areaID"""
 
     def get_queryset(self):
-        return Climb.objects.filter(face_id=self.request.GET("face_id"))
+        return Climb.objects.filter(face_id=self.kwargs["face_id"])
+
+    serializer_class = ClimbSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
+
+
+class ListBookClimbsById(GenericAPIView, mixins.ListModelMixin):
+    """Retrieve all climbs in a book by the bookID"""
+
+    def get_queryset(self):
+        return Climb.objects.filter(
+            face_id__feature_id__area_id__book_id=self.kwargs["book_id"]
+        )
 
     serializer_class = ClimbSerializer
 
