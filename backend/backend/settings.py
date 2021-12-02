@@ -87,6 +87,9 @@ DATABASES = {
     }
 }
 
+# Custom User Model
+# https://docs.djangoproject.com/en/3.2/topics/auth/customizing/#auth-custom-user
+AUTH_USER_MODEL = "radroutes.User"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

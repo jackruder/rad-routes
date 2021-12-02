@@ -4,7 +4,13 @@ from rest_framework.generics import GenericAPIView
 from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-from .serializers import ClimbSerializer
+from .serializers import (
+    ClimbSerializer,
+    FaceSerializer,
+    FeatureSerializer,
+    AreaSerializer,
+    BookSerializer,
+)
 from .models import Climb, User, Book, Face, Area, UserLibrary, BookReview, Feature
 
 # Create your views here.
@@ -26,6 +32,78 @@ class RetrieveUpdateDestroyAllClimb(RetrieveUpdateDestroyAPIView):
 
     serializer_class = ClimbSerializer
     queryset = Climb.objects.all()
+
+
+class CreateListAllFaces(ListCreateAPIView):
+    """
+    adds the ability to list and create climb
+    """
+
+    serializer_class = FaceSerializer
+    queryset = Face.objects.all()
+
+
+class RetrieveUpdateDestroyAllFace(RetrieveUpdateDestroyAPIView):
+    """
+    access a single climb, or update or destroy
+    """
+
+    serializer_class = FaceSerializer
+    queryset = Face.objects.all()
+
+
+class CreateListAllFeatures(ListCreateAPIView):
+    """
+    adds the ability to list and create climb
+    """
+
+    serializer_class = FeatureSerializer
+    queryset = Feature.objects.all()
+
+
+class RetrieveUpdateDestroyAllFeature(RetrieveUpdateDestroyAPIView):
+    """
+    access a single climb, or update or destroy
+    """
+
+    serializer_class = FeatureSerializer
+    queryset = Feature.objects.all()
+
+
+class CreateListAllAreas(ListCreateAPIView):
+    """
+    adds the ability to list and create climb
+    """
+
+    serializer_class = AreaSerializer
+    queryset = Area.objects.all()
+
+
+class RetrieveUpdateDestroyAllArea(RetrieveUpdateDestroyAPIView):
+    """
+    access a single climb, or update or destroy
+    """
+
+    serializer_class = AreaSerializer
+    queryset = Area.objects.all()
+
+
+class CreateListAllBooks(ListCreateAPIView):
+    """
+    adds the ability to list and create climb
+    """
+
+    serializer_class = BookSerializer
+    queryset = Book.objects.all()
+
+
+class RetrieveUpdateDestroyAllBook(RetrieveUpdateDestroyAPIView):
+    """
+    access a single climb, or update or destroy
+    """
+
+    serializer_class = BookSerializer
+    queryset = Book.objects.all()
 
 
 class ListFeatureClimbsById(GenericAPIView, mixins.ListModelMixin):

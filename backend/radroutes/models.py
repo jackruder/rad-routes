@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 DESCRIPTION_MAX_LENGTH = 5000
@@ -24,17 +25,8 @@ def validate_star_rating(value):
         )
 
 
-class User(models.Model):
-    email = models.EmailField(primary_key=True)
-    fname = models.TextField(null=True, blank=True, max_length=TITLE_MAX_LENGTH)
-    lname = models.TextField(null=True, blank=True, max_length=TITLE_MAX_LENGTH)
-    password = models.TextField(
-        max_length=2048
-    )  # these will be hashes so they may be quite long
+class User(AbstractUser):
     is_guide = models.BooleanField()
-
-    def __str__(self):
-        return "%s" % (self.email)
 
 
 class Book(models.Model):
@@ -49,7 +41,8 @@ class Book(models.Model):
     quality_max = models.IntegerField(  # Same scale should be used throughout book
         null=True, blank=True, validators=[validate_star_rating]
     )
-    grade_hist = models.TextField() # comma delimited x-axis values to use for grades
+    grade_hist = models.TextField()  # comma delimited x-axis values to use for grades
+
     def __str__(self):
         return "%s" % (self.book_name)
 
