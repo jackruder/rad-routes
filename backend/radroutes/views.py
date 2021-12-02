@@ -3,7 +3,11 @@ from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from rest_framework import mixins, status
 from rest_framework.response import Response
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import (
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+    ListAPIView,
+)
 from .serializers import (
     ClimbSerializer,
     FaceSerializer,
@@ -17,17 +21,15 @@ from .models import Climb, User, Book, Face, Area, UserLibrary, BookReview, Feat
 # Create your views here.
 
 
-class UserCreate(APIView):
-    """create a user"""
+class UserListView(ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
-    def post(self, request, format="json"):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            if user:
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    lookup_field = "username"
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 # guidebookstuff

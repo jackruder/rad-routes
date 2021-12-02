@@ -15,17 +15,20 @@ from .views import (
     ListFaceClimbsById,
     ListFeatureClimbsById,
     ListBookClimbsById,
-    UserCreate,
+    UserListView,
+    UserRetrieveUpdateDestroyView,
 )
 
 urlpatterns = [
-    path("users/", UserCreate.as_view(), name="create_account"),
+    #lists of objects (post to create, get to retrieve list)
+    path("users/", UserListView.as_view()),
     path("climbs/", CreateListAllClimbs.as_view()),
     path("faces/", CreateListAllFaces.as_view()),
     path("features/", CreateListAllFeatures.as_view()),
     path("areas/", CreateListAllAreas.as_view()),
     path("books/", CreateListAllBooks.as_view()),
-    # individual objects
+    # individual objects (put to update, get for individual object)
+    path("users/<str:username>/", UserRetrieveUpdateDestroyView().as_view()),
     path("climbs/<int:pk>/", RetrieveUpdateDestroyAllClimb.as_view()),
     path("faces/<int:pk>/", RetrieveUpdateDestroyAllFace.as_view()),
     path("features/<int:pk>/", RetrieveUpdateDestroyAllFeature.as_view()),
