@@ -70,10 +70,10 @@ class UserSerializer(serializers.ModelSerializer):
         required=True, validators=[UniqueValidator(queryset=User.objects.all())]
     )
     username = serializers.CharField(
-        validators=[UniqueValidator(queryset=User.objects.all())]
+        max_length=20, validators=[UniqueValidator(queryset=User.objects.all())]
     )
 
-    password = serializers.CharField(min_length=7)
+    password = serializers.CharField(min_length=7, write_only=True)
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -81,8 +81,8 @@ class UserSerializer(serializers.ModelSerializer):
             validated_data["email"],
             validated_data["password"],
             is_guide=validated_data["is_guide"],
-            fname=validated_data["fname"],
-            lname=validated_data["lname"],
+            first_name=validated_data["first_name"],
+            last_name=validated_data["last_name"],
         )
         return user
 
@@ -92,14 +92,21 @@ class UserSerializer(serializers.ModelSerializer):
             validated_data["email"],
             validated_data["password"],
             is_guide=validated_data["is_guide"],
-            fname=validated_data["fname"],
-            lname=validated_data["lname"],
+            first_name=validated_data["first_name"],
+            last_name=validated_data["last_name"],
         )
         return user
 
     class Meta:
         model = User
-        fields = ("username", "email", "password", "fname", "lname", "is_guide")
+        fields = (
+            "username",
+            "email",
+            "password",
+            "first_name",
+            "last_name",
+            "is_guide",
+        )
 
 
 class BookReviewSerializer(serializers.ModelSerializer):
