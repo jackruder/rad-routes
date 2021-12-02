@@ -15,9 +15,11 @@ from .views import (
     ListFaceClimbsById,
     ListFeatureClimbsById,
     ListBookClimbsById,
+    UserCreate,
 )
 
 urlpatterns = [
+    path("users/", UserCreate.as_view(), name="create_account"),
     path("climbs/", CreateListAllClimbs.as_view()),
     path("faces/", CreateListAllFaces.as_view()),
     path("features/", CreateListAllFeatures.as_view()),

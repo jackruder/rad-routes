@@ -1,7 +1,7 @@
 from django.shortcuts import render
-from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
-from rest_framework import mixins
+from rest_framework import mixins, status
 from rest_framework.response import Response
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from .serializers import (
@@ -10,12 +10,25 @@ from .serializers import (
     FeatureSerializer,
     AreaSerializer,
     BookSerializer,
+    UserSerializer,
 )
 from .models import Climb, User, Book, Face, Area, UserLibrary, BookReview, Feature
 
 # Create your views here.
 
 
+class UserCreate(APIView):
+    """create a user"""
+
+    def post(self, request, format="json"):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            if user:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+# guidebookstuff
 class CreateListAllClimbs(ListCreateAPIView):
     """
     adds the ability to list and create climb

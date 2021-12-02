@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 from .models import *
 
 
@@ -65,9 +66,40 @@ class BookSerializer(serializers.ModelSerializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+        required=True, validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+    username = serializers.CharField(
+        validators=[UniqueValidator(queryset=User.objects.all())]
+    )
+
+    password = serializers.CharField(min_length=7)
+
+    def create(self, validated_data):
+        user = User.objects.create_user(
+            validated_data["username"],
+            validated_data["email"],
+            validated_data["password"],
+            is_guide=validated_data["is_guide"],
+            fname=validated_data["fname"],
+            lname=validated_data["lname"],
+        )
+        return user
+
+    def createSuper(self, validated_data):
+        user = User.objects.create_superuser(
+            validated_data["username"],
+            validated_data["email"],
+            validated_data["password"],
+            is_guide=validated_data["is_guide"],
+            fname=validated_data["fname"],
+            lname=validated_data["lname"],
+        )
+        return user
+
     class Meta:
         model = User
-        fields = ("email", "fname", "lname", "is_guide")
+        fields = ("username", "email", "password", "fname", "lname", "is_guide")
 
 
 class BookReviewSerializer(serializers.ModelSerializer):
