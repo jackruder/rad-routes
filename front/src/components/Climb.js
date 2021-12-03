@@ -16,18 +16,9 @@ const getHeightString = (height) => {
   }
 }
 
-const types = {
-  ropedClimb: {
-    name: "Roped Climb"
-  },
-  boulder: {
-    name: "Boulder"
-  }
-}
 
 export default function Climb() {
-  const {id} = useParams();
-
+  const { id } = useParams();
   const [climbObj, setClimbObj] = useState({climb_type: "", grade: "", height: 0});
 
   useEffect(() => {
@@ -38,7 +29,7 @@ export default function Climb() {
         setClimbObj(data);
       })
       .catch(err => console.log(err));
-  }, []);
+  }, [id]);
 
   return (
     <Card
