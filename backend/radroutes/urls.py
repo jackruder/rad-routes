@@ -37,7 +37,7 @@ urlpatterns = [
     path("features/<int:pk>/", RetrieveUpdateDestroyAllFeature.as_view()),
     path("areas/<int:pk>/", RetrieveUpdateDestroyAllArea.as_view()),
     path("books/<int:pk>/", RetrieveUpdateDestroyAllBook.as_view()),
-    ##get climbs by id
+    # get climbs by id
     path("areas/<int:area_id>/climbs/", ListAreaClimbsById.as_view()),
     path("faces/<int:face_id>/climbs/", ListFaceClimbsById.as_view()),
     path("features/<int:feature_id>/climbs/", ListFeatureClimbsById.as_view()),
