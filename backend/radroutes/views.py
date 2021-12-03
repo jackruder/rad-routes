@@ -9,6 +9,7 @@ from rest_framework.generics import (
     ListAPIView,
 )
 from .serializers import (
+    BookReviewSerializer,
     ClimbSerializer,
     FaceSerializer,
     FeatureSerializer,
@@ -171,3 +172,28 @@ class ListBookClimbsById(GenericAPIView, mixins.ListModelMixin):
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
+
+
+class ListBookAreasById(ListCreateAPIView):
+    """get areas given a book"""
+
+    serializer_class = AreaSerializer
+
+    def get_queryset(self):
+        return Area.objects.filter(book_id=self.kwargs["book_id"])
+
+
+class ListAreaFeaturesById(ListCreateAPIView):
+    """get features given an area"""
+
+    serializer_class = FeatureSerializer
+
+    def get_queryset(self):
+        return Feature.objects.filter(area_id=self.kwargs["area_id"])
+
+
+class ListCreateBookReviewsByBook(ListCreateAPIView):
+    serializer_class = BookReviewSerializer
+
+    def get_queryset(self):
+        return BookReview.objects.filter(book_id=self.kwargs["book_id"])

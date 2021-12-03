@@ -17,10 +17,13 @@ from .views import (
     ListBookClimbsById,
     UserListView,
     UserRetrieveUpdateDestroyView,
+    ListBookAreasById,
+    ListAreaFeaturesById,
+    ListCreateBookReviewsByBook,
 )
 
 urlpatterns = [
-    #lists of objects (post to create, get to retrieve list)
+    # lists of objects (post to create, get to retrieve list)
     path("users/", UserListView.as_view()),
     path("climbs/", CreateListAllClimbs.as_view()),
     path("faces/", CreateListAllFaces.as_view()),
@@ -39,4 +42,10 @@ urlpatterns = [
     path("faces/<int:face_id>/climbs/", ListFaceClimbsById.as_view()),
     path("features/<int:feature_id>/climbs/", ListFeatureClimbsById.as_view()),
     path("books/<int:book_id>/climbs/", ListBookClimbsById.as_view()),
+    # list of areas from books
+    path("books/<int:book_id>/areas/", ListBookAreasById.as_view()),
+    # list of features from areas
+    path("areas/<int:area_id>/features/", ListAreaFeaturesById.as_view()),
+    # reviewws
+    path("books/<int:book_id>/reviews/", ListCreateBookReviewsByBook.as_view()),
 ]
