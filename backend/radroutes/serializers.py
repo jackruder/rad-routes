@@ -112,4 +112,4 @@ class UserSerializer(serializers.ModelSerializer):
 class BookReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = BookReview
-        fields = ("book_id", "review_body", "rating")
+        fields = ("reviewer", "book_id", "review_body", "rating")

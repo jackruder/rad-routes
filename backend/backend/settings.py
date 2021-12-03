@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "radroutes.apps.RadroutesConfig",
     "corsheaders",
     "rest_framework",
+    "rest_framework.authtoken",
 ]
 
 MIDDLEWARE = [
