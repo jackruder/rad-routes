@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import Card from 'react-bootstrap/Card';
 
-const apiUrlBase = process.env.NODE_ENV === "production" ? "" : "http://localhost:8000/api";
+const apiUrlBase = "http://localhost:8000/api";
 
 const getHeightString = (height) => {
   const ft = `${Math.round(height * 3.28084)}ft`;
@@ -16,10 +16,9 @@ const getHeightString = (height) => {
   }
 }
 
-
 export default function Climb() {
   const { id } = useParams();
-  const [climbObj, setClimbObj] = useState({climb_type: "", grade: "", height: 0});
+  const [climbObj, setClimbObj] = useState({ placeholder: null });
 
   useEffect(() => {
     fetch(`${apiUrlBase}/climbs/${id}`)
@@ -32,6 +31,7 @@ export default function Climb() {
   }, [id]);
 
   return (
+    Object.keys(climbObj).length > 1 ?
     <Card
       style={{ width: '36rem', margin: 10 }}
     >
@@ -48,7 +48,7 @@ export default function Climb() {
             <Card.Link>Feature</Card.Link><br/>
           </div>
           <Card.Title style={{ marginTop: '1rem' }}>Description</Card.Title>
-          <Card.Text>
+          <Card.Text style={{minWidth: '20rem', maxWidth: '20rem'}}>
             {climbObj.description}
           </Card.Text>
         </Card.Body>
@@ -60,6 +60,6 @@ export default function Climb() {
             Vitae alias aperiam. A autem temporibus veritatis minima dolore deserunt.
           </Card.Text>
       </Card.Body>
-    </Card>
+    </Card> : <>This Climb Does Not Exist</>
   )
 }
