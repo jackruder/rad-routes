@@ -6,6 +6,7 @@ import SignUp from './components/SignUp';
 import Login from './components/Login';
 import Search from './components/Search';
 import Climb from './components/Climb';
+import EditPortal from './components/EditPortal';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route exact path="/signup" element={<SignUp/>}/>
         <Route exact path="/login" element={<Login/>}/>
         <Route exact path="/search" element={<Search/>}/>
+        <Route exact path="/editportal" element={<EditPortal/>}/>
       </Routes>
     </BrowserRouter>
   );
