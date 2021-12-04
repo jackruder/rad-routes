@@ -20,7 +20,7 @@ function App() {
           <Route exact path="/signup" element={<SignUp/>}/>
           <Route exact path="/login" element={<Login/>}/>
           <Route exact path="/search" element={<Search/>}/>
-          <Route exact path="/editportal" element={<EditPortal/>}/>
+          <Route exact path="/edit" element={<EditPortal/>}/>
         </Routes>
       </Layout>
     </BrowserRouter>

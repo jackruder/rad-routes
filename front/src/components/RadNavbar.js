@@ -9,7 +9,7 @@ export default function RadNavbar() {
   const navigate = useNavigate();
 
   return (
-    <Navbar bg="light" expand="md" sticky="top">
+    <Navbar bg="light" expand="md" sticky="top" style={{ minWidth: '100vw', maxWidth: '100vw' }}>
       <Container>
         <Navbar.Brand
           style={{cursor: "pointer"}}
@@ -21,6 +21,7 @@ export default function RadNavbar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link onClick={() => navigate("/climbs")}>Climbs</Nav.Link>
+            <Nav.Link onClick={() => navigate("/edit")}>Create</Nav.Link>
           </Nav>
           <Nav className="justify-content-end" style={{width: '100%'}}>
             <Nav.Link onClick={() => navigate("/signup")}>Sign Up</Nav.Link>
