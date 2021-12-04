@@ -29,11 +29,15 @@ export default function SignUp(){
     const [usernameError, setUsernameError] = useState("");
     const [emailError, setEmailError] = useState("");
     const [passwordError, setPasswordError] = useState("");
+    const [firstNameError, setFirstNameError] = useState("");
+    const [lastNameError, setLastNameError] = useState("");
 
     const errorSetters = {
         username: setUsernameError,
         email: setEmailError,
-        password: setPasswordError
+        password: setPasswordError,
+        first_name: setFirstNameError,
+        last_name: setLastNameError
     }
 
     return(
@@ -61,6 +65,12 @@ export default function SignUp(){
 
                     <Form.Group className="mb-3" controlId="first_name">
                         <Form.Label>First Name</Form.Label>
+                        {firstNameError !== "" ?
+                        <> <br/>
+                        <Form.Text style={{color: "#f00"}}>
+                            {firstNameError}
+                        </Form.Text> </>
+                        : <></>}
                         <Form.Control type="text" placeholder="John"
                             onInput={e => {
                                 let newData = formData;
@@ -72,6 +82,12 @@ export default function SignUp(){
 
                     <Form.Group className="mb-3" controlId="last_name">
                         <Form.Label>Last Name</Form.Label>
+                        {lastNameError !== "" ?
+                        <> <br/>
+                        <Form.Text style={{color: "#f00"}}>
+                            {lastNameError}
+                        </Form.Text> </>
+                        : <></>}
                         <Form.Control type="text" placeholder="Smith"
                             onInput={e => {
                                 let newData = formData;
@@ -187,10 +203,15 @@ export default function SignUp(){
                             .then(data => {
                                 console.log(data);
                                 let err = false;
-                                for(let key of Object.keys(data)){
-                                    if(Object.prototype.toString.call(data[key]) === "[object Array]"){
-                                        err = true;
-                                        errorSetters[key](data[key][0]);
+                                for(let key of Object.keys(formData)){
+                                    if(Object.keys(data).indexOf(key) >= 0){
+                                        if(Object.prototype.toString.call(data[key]) === "[object Array]"){
+                                            err = true;
+                                            errorSetters[key](data[key][0]);
+                                        }
+                                    }
+                                    else if (Object.keys(errorSetters).indexOf(key) >= 0){
+                                        errorSetters[key]("");
                                     }
                                 }
                                 if(!err){
