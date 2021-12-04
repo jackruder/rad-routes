@@ -110,7 +110,9 @@ class Climb(models.Model):
         max_length=NAME_MAX_LENGTH
     )  # max length is a concern for exploitation not formatting, so the number is fairly high
     climb_type = models.TextField(null=True, blank=True, max_length=50)
-    face_id = models.ForeignKey(Face, null=True, blank=True, on_delete=models.CASCADE)
+    face_id = models.ForeignKey(
+        Face, null=True, blank=True, on_delete=models.CASCADE
+    )  # TODO rewrite this so upon deletion they get added to default face
     grade = models.TextField(null=True, blank=True, max_length=20)
     quality = models.IntegerField(
         null=True, blank=True, validators=[validate_star_rating]
@@ -125,17 +127,22 @@ class Climb(models.Model):
         return "%s" % (self.climb_name)
 
 
+class AreaEditPermissions(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
+
+
 class UserPrivateAccess(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    book_id = models.ForeignKey(Book, on_delete=models.DO_NOTHING)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (("user_id", "book_id"),)
 
 
 class UserLibrary(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    book_id = models.ForeignKey(Book, on_delete=models.DO_NOTHING)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s library" % (self.user_id.__str__())
@@ -145,7 +152,7 @@ class UserLibrary(models.Model):
 
 
 class BookReview(models.Model):
-    reviewer = models.ForeignKey(User, on_delete=models.CASCADE)
+    reviewer = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
     review_body = models.TextField(
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
