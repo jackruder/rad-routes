@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 
 import Card from 'react-bootstrap/Card';
-
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 const getHeightString = (height) => {
   const ft = `${Math.round(height * 3.28084)}ft`;
@@ -16,19 +13,14 @@ const getHeightString = (height) => {
   }
 }
 
-export default function Climb() {
-  const { id } = useParams();
-  const [climbObj, setClimbObj] = useState({ placeholder: null });
+const images = {
+  "Cartilage": "/static/assets/cartilage.png",
+  "Jagged Jaw": "/static/assets/jagged.jpg",
+  "In-N-Out": "/static/assets/in-n-out.png"
+}
 
-  useEffect(() => {
-    fetch(`${apiUrlBase}/climbs/${id}`)
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-        setClimbObj(data);
-      })
-      .catch(err => console.log(err));
-  }, [id]);
+export default function Climb({ data }) {
+  const climbObj = data;
 
   return (
     Object.keys(climbObj).length > 1 ?
@@ -36,25 +28,29 @@ export default function Climb() {
       style={{ width: '36rem', margin: 10 }}
     >
       <div style={{display: 'flex'}}>
-        <Card.Body>
+        <Card.Body style={{ minWidth: '60%', lineHeight: '2rem'}}>
           <Card.Title>{climbObj.climb_name}</Card.Title>
           Type: <b>{climbObj.climb_type}</b> <br/>
           Grade: <b>{climbObj.grade}</b> <br/>
 
           <div style={{flexGrow: 1}}>Height: <b>{getHeightString(climbObj.height)}</b></div>
 
-          <div style={{lineHeight: '3rem'}} aria-label="Links to the face and feature on which this climb resides.">
-            <Card.Link>Face</Card.Link>
+          <div aria-label="Links to the face and feature on which this climb resides.">
+            <Card.Link>Face</Card.Link><br/>
             <Card.Link>Feature</Card.Link><br/>
           </div>
-          <Card.Title style={{ marginTop: '1rem' }}>Description</Card.Title>
-          <Card.Text style={{minWidth: '20rem', maxWidth: '20rem'}}>
-            {climbObj.description}
-          </Card.Text>
         </Card.Body>
-        <Card.Img variant="top" src="/static/assets/rock-climbing.jpeg" style={{ overflow: 'hidden', height: '100%' }} />
+        <div style={{
+          width: '100%',
+          backgroundImage: `url(${images[climbObj.climb_name]})`,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center'
+        }}/>
       </div>
       <Card.Body>
+          <Card.Title style={{ marginTop: '1rem' }}>Description</Card.Title>
+          <Card.Text> {climbObj.description} </Card.Text>
           <Card.Title>Getting There</Card.Title>
           <Card.Text>
             Vitae alias aperiam. A autem temporibus veritatis minima dolore deserunt.
