@@ -1,4 +1,5 @@
 from django.urls import path
+from rest_framework.authtoken.views import obtain_auth_token
 
 from .views import (
     CreateListAllClimbs,
@@ -48,4 +49,6 @@ urlpatterns = [
     path("areas/<int:area_id>/features/", ListAreaFeaturesById.as_view()),
     # reviewws
     path("books/<int:book_id>/reviews/", ListCreateBookReviewsByBook.as_view()),
+    # token authorization
+    path("authorization/", obtain_auth_token),
 ]
