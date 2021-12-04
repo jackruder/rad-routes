@@ -1,0 +1,2 @@
+- Climb.author_email should point to an email, not an integer id number as it currently does. That, or change the name of 'author_email' to 'author_id'
+- add image field to Climb as a URLField
