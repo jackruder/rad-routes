@@ -19,13 +19,16 @@ export default function ClimbList(){
 
     return (
         <Row xs={1} md={2} style={{ width: '100%' }}>
-            {climbList.map(climb => (
-            <Col style={{
-                display: 'flex',
-                justifyContent: 'center'
-            }}>
-                <Climb data={climb}/>
-            </Col>
+            {climbList.map((climb, idx) => (
+                <Col
+                    key={idx}
+                    style={{
+                        display: 'flex',
+                        justifyContent: 'center'
+                    }}
+                >
+                    <Climb data={climb}/>
+                </Col>
             ))}
         </Row>
     )

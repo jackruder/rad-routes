@@ -1,12 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
+import NavDropdown from 'react-bootstrap/NavDropdown';
 
-export default function RadNavbar() {
+export default function RadNavbar({ loggedIn, setLoggedIn }) {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setLoggedIn(Object.keys(sessionStorage).indexOf("auth_token") >= 0 || Object.keys(localStorage).indexOf("auth_token") >= 0);
+  }, [setLoggedIn]);
 
   return (
     <Navbar bg="light" expand="md" sticky="top" style={{ minWidth: '100vw', maxWidth: '100vw' }}>
@@ -24,8 +29,24 @@ export default function RadNavbar() {
             <Nav.Link onClick={() => navigate("/edit")}>Create</Nav.Link>
           </Nav>
           <Nav className="justify-content-end" style={{width: '100%'}}>
-            <Nav.Link onClick={() => navigate("/signup")}>Sign Up</Nav.Link>
-            <Nav.Link onClick={() => navigate("/login")}>Login</Nav.Link>
+            { 
+              !loggedIn ? <>
+                <Nav.Link onClick={() => navigate("/signup")}>Sign Up</Nav.Link>
+                <Nav.Link onClick={() => navigate("/login")}>Login</Nav.Link>
+              </>
+              :
+              <NavDropdown title={localStorage.username} id="user-dropdown">
+                <Nav.Link onClick={() => {
+                  for(let item of ["username", "token"]){
+                    localStorage.removeItem(item);
+                    sessionStorage.removeItem(item);
+                  }
+                  setLoggedIn(false);
+                }}>
+                  Logout
+                </Nav.Link>
+              </NavDropdown>
+            }
           </Nav>
         </Navbar.Collapse>
       </Container>
