@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import Card from 'react-bootstrap/Card';
 
-const apiUrlBase = "http://localhost:8000/api";
+const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 const getHeightString = (height) => {
   const ft = `${Math.round(height * 3.28084)}ft`;

@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 
 export default function EditPortal(){
-
+    // eslint-disable-next-line
     const climbData = ["Saab", "Volvo", "BMW"];
 
     return(
