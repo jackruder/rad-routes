@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
+import Swal from 'sweetalert2';
 
 const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
@@ -21,13 +22,18 @@ export default function SignUp(){
     const [passwordOutline, setPasswordOutline] = useState(false);
     const [passwordConfirmed, setPasswordConfirmed] = useState(false);
     const [password, setPassword] = useState("");
+    const [passConfirm, setPassConfirm] = useState("");
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const [usernameError, setUsernameError] = useState("");
     const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
     const errorSetters = {
         username: setUsernameError,
-        email: setEmailError
+        email: setEmailError,
+        password: setPasswordError
     }
 
     return(
@@ -38,6 +44,12 @@ export default function SignUp(){
                 <Form>
                     <Form.Group className="mb-3" controlId="first_name">
                         <Form.Label>Username</Form.Label>
+                        {usernameError !== "" ?
+                        <> <br/>
+                        <Form.Text style={{color: "#f00"}}>
+                            {usernameError}
+                        </Form.Text> </>
+                        : <></>}
                         <Form.Control type="text" placeholder="johnsmith42"
                             onInput={e => {
                                 let newData = formData;
@@ -45,11 +57,6 @@ export default function SignUp(){
                                 setFormData(newData);
                             }}
                         />
-                        {usernameError !== "" ? 
-                        <Form.Text style={{color: "#f00"}}>
-                            {usernameError}
-                        </Form.Text>
-                        : <></>}
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="first_name">
@@ -95,25 +102,42 @@ export default function SignUp(){
 
                     <Form.Group className="mb-3" controlId="password">
                         <Form.Label>Password</Form.Label>
+                        {passwordError !== "" ? <><br/>
+                        <Form.Text style={{color: "#f00"}}>
+                            {passwordError}
+                        </Form.Text></>
+                        : <></>}
                         <Form.Control
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Enter password"
-                            style={{ outline: passwordOutline }}
+                            style={{ marginBottom: '5px', outline: passwordOutline }}
                             onInput={e => {
                                 setPassword(e.target.value);
-                                // need to make sure that if the user has already typed in the confirmation box before
-                                // that this box starts checking for equality as well
+                                if(e.target.value === passConfirm){
+                                    setPasswordOutline(null);
+                                    setPasswordConfirmed(true);
+
+                                    let newData = formData;
+                                    newData.password = password;
+                                    setFormData(newData);
+                                }
+                                else{
+                                    setPasswordOutline(redOutline);
+                                    setPasswordConfirmed(false);
+                                }
                             }}
                         />
                         <Form.Control
-                            style={{position: 'relative', top: '5px', outline: passwordOutline}}
-                            type="password"
+                            style={{ marginBottom: '5px',  outline: passwordOutline}}
+                            type={showPassword ? "text" : "password"}
                             placeholder="Confirm password"
                             onInput={e => {
-                                let newData = formData;
-                                if(password === e.target.value){
+                                setPassConfirm(e.target.value);
+                                if(e.target.value === password){
                                     setPasswordOutline(null);
                                     setPasswordConfirmed(true);
+
+                                    let newData = formData;
                                     newData.password = password;
                                     setFormData(newData);
                                 }
@@ -122,6 +146,13 @@ export default function SignUp(){
                                 }
                             }}
                         />
+                        <Button variant="light" size="sm"
+                            onClick={() => {
+                                setShowPassword(!showPassword);
+                            }}
+                        >
+                            {showPassword ? "Hide Password" : "Show Password"}
+                        </Button>
                     </Form.Group>
 
                     <Form.Check 
@@ -155,13 +186,23 @@ export default function SignUp(){
                             .then(res => res.json())
                             .then(data => {
                                 console.log(data);
+                                let err = false;
                                 for(let key of Object.keys(data)){
                                     if(Object.prototype.toString.call(data[key]) === "[object Array]"){
+                                        err = true;
                                         errorSetters[key](data[key][0]);
                                     }
                                 }
-                                // need to undo errors if successful
-                                // and alert the user to success somehow (sweetalert2 time?)
+                                if(!err){
+                                    for(let key of Object.keys(errorSetters)){
+                                        errorSetters[key](false);
+                                    }
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Account Created',
+                                        text: `Welcome to Rad Routes, ${formData.first_name} 🧗`
+                                    });
+                                }
                             })
                             .catch(e => {
                                 console.log(e);
