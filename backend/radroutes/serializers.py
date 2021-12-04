@@ -67,10 +67,23 @@ class BookSerializer(serializers.ModelSerializer):
 
 class UserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
-        required=True, validators=[UniqueValidator(queryset=User.objects.all())]
+        required=True,
+        validators=[
+            UniqueValidator(
+                queryset=User.objects.all(),
+                message="This email is already in use."
+            )
+        ]
     )
     username = serializers.CharField(
-        max_length=20, validators=[UniqueValidator(queryset=User.objects.all())]
+        required=True,
+        max_length=20,
+        validators=[
+            UniqueValidator(
+                queryset=User.objects.all(),
+                message="This username is already taken."
+            )
+        ]
     )
 
     password = serializers.CharField(min_length=7, write_only=True)
