@@ -1,11 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
+import Row from 'react-bootstrap/Row';
+
+import EditClimb from './editPortals/EditClimb.js';
+import EditArea from './editPortals/EditArea.js';
+import EditFeature from './editPortals/EditFeature.js';
+import EditFace from './editPortals/EditFace.js';
+
+const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 export default function EditPortal(){
-    // eslint-disable-next-line
-    const climbData = ["Saab", "Volvo", "BMW"];
+
+    const [selectedForm, setForm] = useState('Climb');
+
+    const renderForm = React.useCallback(() => {
+        switch(selectedForm) {
+            case 'Climb': 
+                return <EditClimb />;
+          
+            case 'Area': 
+                return <EditArea />;
+    
+            case 'Feature': 
+                return <EditFeature />;
+    
+            case 'Face': 
+                return <EditFace />;
+    
+            default: 
+                return null;
+          
+        }
+    }, [selectedForm]);
 
     return(
         <Card
@@ -13,43 +40,25 @@ export default function EditPortal(){
         >
         
             <Card.Body>
-                <Card.Title>Edit Climb</Card.Title>
+                <Row>
+                    <Card.Title>Edit</Card.Title>
 
-                <Form style={{ margin: 'auto'}}>
-                    <Form.Group className="mb-3" controlId="climb_name">
-                        <Form.Label>Climb Name</Form.Label>
-                        <Form.Control type="text" placeholder="" />
-                    </Form.Group>
+                    <Form.Select style= {{margin: 'auto', width: '50%'}}size="lg"
+                        onChange={e => {
+                            setForm(e.target.value);
+                        }}
+                    >
+                        <option value={"Climb"}>Climb</option>
+                        <option value={"Area"}>Area</option>
+                        <option value={"Feature"}>Feature</option>
+                        <option value={"Face"}>Face</option>
 
-                    <Form.Group className="mb-3" controlId="climb_type">
-                        <Form.Label>Climb Type</Form.Label>
-                        <Form.Control type="text" placeholder="" />
-                    </Form.Group>
+                    </Form.Select>
+                </Row>
 
-                    <Form.Group className="mb-3" controlId="grade">
-                        <Form.Label>Grade</Form.Label>
-                        <Form.Control type="text" placeholder="" />
-                    </Form.Group>
+                <br />
 
-                    <Form.Group className="mb-3" controlId="height">
-                        <Form.Label>Height</Form.Label>
-                        <Form.Control type="text" placeholder="" />
-                    </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="description">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control as="textarea" rows={3} />
-                    </Form.Group>
-
-                    <Form.Group controlId="formFile" className="mb-3">
-                        <Form.Label>Climb Image</Form.Label>
-                        <Form.Control type="file" />
-                    </Form.Group>
-
-                    <Button variant="primary" type="submit">
-                        Save Changes
-                    </Button>
-                </Form>
+                {renderForm()}
 
             </Card.Body>
         </Card>
