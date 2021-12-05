@@ -1,0 +1,82 @@
+from rest_framework import permissions
+from .models import UserLibrary, Book
+
+
+def grantBookReqUser(book, request):
+    if request.method in permissions.SAFE_METHODS:
+        if book.listed == 1 and book.private == 0: #We need to think about adding ability to see info about listed private books
+            return True
+        else:
+            q = UserLibrary.objects.get(book_id=book.book_id).filter(user_id=request.user)
+            if q.exists():
+                return True
+            else:
+                return False
+
+    else:
+        if book.author == request.user:
+            return True
+
+
+class ClimbPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return True
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_superuser:
+            return True
+        if obj.author == request.user:
+            return True
+
+        book = Book.objects.get(book_id__area_id__feature_id__face_id__climb_id=obj.climb_id)
+        return grantBookReqUser(book, request)
+
+class FacePermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return True
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_superuser:
+            return True
+
+        book = Book.objects.get(book_id__area_id__feature_id__face_id=obj.face_id)
+        return grantBookReqUser(book, request)
+
+class FeaturePermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return True
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_superuser:
+            return True
+
+        book = Book.objects.get(book_id__area_id__feature_id=obj.feature_id)
+        return grantBookReqUser(book, request)
+
+class AreaPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return True
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_superuser:
+            return True
+
+        book = Book.objects.get(book_id__area_id=obj.area_id)
+        return grantBookReqUser(book, request)
+
+class BookPermissions(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.user.is_authenticated:
+            return True
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_superuser:
+            return True
+
+        return grantBookReqUser(obj, request)
+
+
