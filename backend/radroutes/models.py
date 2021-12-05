@@ -95,7 +95,7 @@ class Face(models.Model):
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
     )
     feature_id = models.ForeignKey(Feature, on_delete=models.CASCADE)
-    image = models.ImageField(
+    image = models.URLField(
         null=True, blank=True
     )  # PILLOW needs to be installed for this to work
 
@@ -105,7 +105,7 @@ class Face(models.Model):
 
 class Climb(models.Model):
     climb_id = models.AutoField(primary_key=True)
-    author_email = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     climb_name = models.TextField(
         max_length=NAME_MAX_LENGTH
     )  # max length is a concern for exploitation not formatting, so the number is fairly high
