@@ -8,7 +8,7 @@ class ClimbSerializer(serializers.ModelSerializer):
         model = Climb
         fields = (
             "climb_id",
-            "author_email",
+            "author",
             "climb_name",
             "climb_type",
             "face_id",
@@ -70,20 +70,18 @@ class UserSerializer(serializers.ModelSerializer):
         required=True,
         validators=[
             UniqueValidator(
-                queryset=User.objects.all(),
-                message="This email is already in use."
+                queryset=User.objects.all(), message="This email is already in use."
             )
-        ]
+        ],
     )
     username = serializers.CharField(
         required=True,
         max_length=20,
         validators=[
             UniqueValidator(
-                queryset=User.objects.all(),
-                message="This username is already taken."
+                queryset=User.objects.all(), message="This username is already taken."
             )
-        ]
+        ],
     )
 
     password = serializers.CharField(min_length=7, write_only=True)
