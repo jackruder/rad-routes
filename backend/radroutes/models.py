@@ -56,9 +56,11 @@ class Book(models.Model):
         null=True, blank=True, validators=[validate_star_rating]
     )
     grade_hist = models.TextField()  # comma delimited x-axis values to use for grades
-
+    
     def __str__(self):
         return "%s" % (self.book_name)
+    def containing_book(self):
+        return self
 
 
 class Area(models.Model):
@@ -72,6 +74,8 @@ class Area(models.Model):
 
     def __str__(self):
         return "%s" % (self.area_name)
+    def containing_book(self):
+        return self.book_id
 
 
 class Feature(models.Model):
