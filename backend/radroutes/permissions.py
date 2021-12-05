@@ -19,9 +19,6 @@ def grantBookReqUser(book, request):
 
 
 class ClimbPermissions(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            return True
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
@@ -33,9 +30,6 @@ class ClimbPermissions(permissions.BasePermission):
         return grantBookReqUser(book, request)
 
 class FacePermissions(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            return True
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
@@ -45,9 +39,6 @@ class FacePermissions(permissions.BasePermission):
         return grantBookReqUser(book, request)
 
 class FeaturePermissions(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            return True
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
@@ -57,9 +48,6 @@ class FeaturePermissions(permissions.BasePermission):
         return grantBookReqUser(book, request)
 
 class AreaPermissions(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            return True
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
@@ -69,14 +57,10 @@ class AreaPermissions(permissions.BasePermission):
         return grantBookReqUser(book, request)
 
 class BookPermissions(permissions.BasePermission):
-    def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            return True
 
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
             return True
 
         return grantBookReqUser(obj, request)
-
 
