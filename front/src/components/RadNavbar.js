@@ -14,8 +14,8 @@ export default function RadNavbar({ loggedIn, setLoggedIn }) {
   }, [setLoggedIn]);
 
   return (
-    <Navbar bg="light" expand="md" sticky="top" style={{ minWidth: '100vw', maxWidth: '100vw' }}>
-      <Container>
+    <Navbar bg="dark" variant="dark" expand="md" sticky="top" style={{ minWidth: '100vw', maxWidth: '100vw' }}>
+      <Container fluid>
         <Navbar.Brand
           style={{cursor: "pointer"}}
           onClick={() => navigate("/")}
