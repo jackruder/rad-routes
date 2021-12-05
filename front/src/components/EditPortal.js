@@ -48,10 +48,10 @@ export default function EditPortal(){
                             setForm(e.target.value);
                         }}
                     >
-                        <option value={"Climb"}>Climb</option>
                         <option value={"Area"}>Area</option>
                         <option value={"Feature"}>Feature</option>
                         <option value={"Face"}>Face</option>
+                        <option value={"Climb"}>Climb</option>
 
                     </Form.Select>
                 </Row>
