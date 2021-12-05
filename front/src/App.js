@@ -22,7 +22,7 @@ function App() {
       <Layout loggedIn={loggedIn} setLoggedIn={setLoggedIn}>
         <Routes>
           <Route exact path="/" element={<Home/>}/>
-          <Route exact path="/climbs" element={<ClimbList/>}/>
+          <Route exact path="/climbs" element={<ClimbList loggedIn={loggedIn}/>}/>
           <Route exact path="/climbs/:id" element={<Climb/>}/>
           <Route exact path="/signup" element={<SignUp/>}/>
           <Route exact path="/login" element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>

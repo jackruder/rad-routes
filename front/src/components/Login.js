@@ -70,10 +70,6 @@ export default function Login({ setLoggedIn }){
                             disabled={formDisabled}
                             onClick={e => {
                                 e.preventDefault();
-                                console.log("sending: ", {
-                                    username,
-                                    password
-                                });
 
                                 fetch(`${apiUrlBase}/authorization/`, {
                                     method: 'POST',
@@ -84,7 +80,6 @@ export default function Login({ setLoggedIn }){
                                 })
                                 .then(res => res.json())
                                 .then(data => {
-                                    console.log(data);
                                     // check for invalid credentials
                                     if(Object.keys(data).length === 1 && Object.keys(data).indexOf('non_field_errors') >= 0){
                                         setInvalidLogin(true);

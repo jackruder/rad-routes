@@ -36,13 +36,16 @@ export default function RadNavbar({ loggedIn, setLoggedIn }) {
               </>
               :
               <NavDropdown title={localStorage.username} id="user-dropdown">
-                <Nav.Link onClick={() => {
-                  for(let item of ["username", "token"]){
-                    localStorage.removeItem(item);
-                    sessionStorage.removeItem(item);
-                  }
-                  setLoggedIn(false);
-                }}>
+                <Nav.Link
+                  onClick={() => {
+                    for(let item of ["username", "auth_token"]){
+                      localStorage.removeItem(item);
+                      sessionStorage.removeItem(item);
+                    }
+                    setLoggedIn(false);
+                    window.location.reload();
+                  }}
+                >
                   Logout
                 </Nav.Link>
               </NavDropdown>
