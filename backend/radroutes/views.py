@@ -230,7 +230,7 @@ class RetrieveUpdateDestroyAllFeature(RetrieveUpdateDestroyAPIView):
 
     permission_classes = [FeaturePermissions]
 
-    serializer_class = FaceSerializer
+    serializer_class = FeatureSerializer
     queryset = Feature.objects.all()
 
     def get_queryset(self):
