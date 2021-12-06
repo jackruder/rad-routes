@@ -25,6 +25,7 @@ export default function RadNavbar({ loggedIn, setLoggedIn }) {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
+            <Nav.Link onClick={() => navigate("/books")}>Guidebooks</Nav.Link>
             <Nav.Link onClick={() => navigate("/climbs")}>Climbs</Nav.Link>
             <Nav.Link onClick={() => navigate("/search")}>Search</Nav.Link>
             {

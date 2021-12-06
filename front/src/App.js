@@ -5,8 +5,8 @@ import Home from './components/Home';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import Search from './components/Search';
-import Climb from './components/Climb';
 import ClimbList from './components/ClimbList';
+import BookList from './components/BookList';
 import EditPortal from './components/EditPortal';
 import Layout from './components/Layout';
 
@@ -23,7 +23,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<Home/>}/>
           <Route exact path="/climbs" element={<ClimbList loggedIn={loggedIn}/>}/>
-          <Route exact path="/climbs/:id" element={<Climb/>}/>
+          <Route exact path="/books" element={<BookList loggedIn={loggedIn}/>}/>
           <Route exact path="/signup" element={<SignUp/>}/>
           <Route exact path="/login" element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>
           <Route exact path="/search" element={<Search/>}/>
