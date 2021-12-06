@@ -26,11 +26,14 @@ export default function RadNavbar({ loggedIn, setLoggedIn }) {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
             <Nav.Link onClick={() => navigate("/books")}>Guidebooks</Nav.Link>
+            <Nav.Link onClick={() => navigate("/areas")}>Areas</Nav.Link>
+            <Nav.Link onClick={() => navigate("/features")}>Features</Nav.Link>
+            <Nav.Link onClick={() => navigate("/faces")}>Faces</Nav.Link>
             <Nav.Link onClick={() => navigate("/climbs")}>Climbs</Nav.Link>
             <Nav.Link onClick={() => navigate("/search")}>Search</Nav.Link>
             {
               loggedIn ?
-              <Nav.Link onClick={() => navigate("/edit")}>Create</Nav.Link>
+              <Nav.Link onClick={() => navigate("/create")}>Create</Nav.Link>
               :
               <></>
             }

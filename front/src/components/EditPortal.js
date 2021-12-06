@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
 
 import EditClimb from './editPortals/EditClimb.js';
 import EditArea from './editPortals/EditArea.js';
@@ -42,10 +41,15 @@ export default function EditPortal(){
         >
         
             <Card.Body>
-                <Row>
-                    <Card.Title>Edit</Card.Title>
+                <div style={{ display: 'flex' }}>
+                    <Card.Title style={{ lineHeight: 2 }}>Create a new</Card.Title>
 
-                    <Form.Select style= {{margin: 'auto', width: '50%'}}size="lg"
+                    <Form.Select
+                        style={{
+                            marginLeft: 20,
+                            width: 'clamp(200px, 25%, 400px)',
+                        }}
+                        size="lg"
                         onChange={e => {
                             setForm(e.target.value);
                         }}
@@ -57,7 +61,7 @@ export default function EditPortal(){
                         <option value={"Book"}>Book</option>
 
                     </Form.Select>
-                </Row>
+                </div>
 
                 <br />
 

@@ -49,7 +49,7 @@ export default function EditBook(){
                 <Form.Check 
                     type={'checkbox'}
                     id={`public`}
-                    label={`Public?`}
+                    label={`Public`}
                     onInput={e => {
                         let newData = formData;
                         newData.public = e.target.checked;
@@ -60,7 +60,7 @@ export default function EditBook(){
                 <Form.Check 
                     type={'checkbox'}
                     id={`listed`}
-                    label={`Listed?`}
+                    label={`Listed`}
                     onInput={e => {
                         let newData = formData;
                         newData.listed = e.target.checked;

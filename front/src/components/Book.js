@@ -16,7 +16,6 @@ export default function Book({ data }) {
         <Card.Body style={{ minWidth: '60%', lineHeight: '2rem'}}>
           <Card.Title>{bookObj.book_name}</Card.Title>
           <Card.Text style={{ marginTop: '1rem' }}>{bookObj.book_description}</Card.Text>
-          <Card.Text> {bookObj.description} </Card.Text>
           Best Quality: <b>{bookObj.quality_max}</b> <br/>
           <Card.Link>Author</Card.Link><br/>
           <Card.Link>Areas</Card.Link><br/>
