@@ -7,10 +7,10 @@ import Swal from 'sweetalert2';
 const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 const defaultFormData = {
-    author: 4,
+    author: 4,  //TODO
     climb_name: null,
     climb_type: null,
-    face_id: 1,
+    face_id: 1, //TODO
     grade: null,
     height: null,
     description: null,

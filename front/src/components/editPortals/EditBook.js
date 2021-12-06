@@ -9,7 +9,7 @@ const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.gui
 const defaultFormData = {
     book_name: null,
     book_description: null,
-    author: 4,
+    author: 4,  //TODO
     public: false,
     listed: false,
     grade_hist: "1, 4, 3",
