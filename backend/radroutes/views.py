@@ -185,7 +185,7 @@ class ListUserLibrary(ListAPIView):
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
-            return Book.objects.filter(Q(listed=True))
+            return Book.objects.filter(Q(listed=True), Q(public=True))
         else:
             return Book.objects.raw(
                 "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE username=%s",
