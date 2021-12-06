@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from django.shortcuts import render
 from django.db.models import Q
 from guardian.shortcuts import assign_perm
@@ -176,6 +177,20 @@ class CreateListAllBooks(ListCreateAPIView):
                 )
                 q = Book.objects.filter(Q(author=self.request.user), Q(listed=True))
                 return b.union(q)
+
+
+class ListUserLibrary(ListAPIView):
+    serializer_class = BookSerializer
+    permission_classes = [BookPermissions]
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Book.objects.filter(Q(listed=True))
+        else:
+            return Book.objects.raw(
+                "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE username=%s",
+                [self.request.user.username],
+            )
 
 
 class RetrieveUpdateDestroyAllBook(RetrieveUpdateDestroyAPIView):

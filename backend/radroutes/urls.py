@@ -23,6 +23,7 @@ from .views import (
     ListAreaFeaturesById,
     ListCreateBookReviewsByBook,
     UserLogout,
+    ListUserLibrary
 )
 
 urlpatterns = [
@@ -54,4 +55,5 @@ urlpatterns = [
     # token authorization
     path("authorization/", obtain_auth_token),
     path("login/", include("rest_framework.urls")),
+    path("library/", ListUserLibrary.as_view())
 ]
