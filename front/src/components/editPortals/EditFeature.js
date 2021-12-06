@@ -18,17 +18,17 @@ const defaultFormData = {
 export default function EditFeature(){
     const [formData, setFormData] = useState(defaultFormData);
 
-    const [featureNameError, setFeatureNameError] = useState("");
-    const [featureDescriptionError, setFeatureDescriptionError] = useState("");
-    const [gpsError, setGpsError] = useState("");
-    const [locationError, setLocationError] = useState("");
+    // const [featureNameError, setFeatureNameError] = useState("");
+    // const [featureDescriptionError, setFeatureDescriptionError] = useState("");
+    // const [gpsError, setGpsError] = useState("");
+    // const [locationError, setLocationError] = useState("");
 
-    const errorSetters = {
-        feature_name: setFeatureNameError,
-        feature_description: setFeatureDescriptionError,
-        gps: setGpsError,
-        location: setLocationError,
-    }
+    // const errorSetters = {
+    //     feature_name: setFeatureNameError,
+    //     feature_description: setFeatureDescriptionError,
+    //     gps: setGpsError,
+    //     location: setLocationError,
+    // }
 
     return (
         <Container>
@@ -98,12 +98,12 @@ export default function EditFeature(){
                                 if(Object.keys(data).indexOf(key) >= 0){
                                     if(Object.prototype.toString.call(data[key]) === "[object Array]"){
                                         err = true;
-                                        errorSetters[key](data[key][0]);
+                                        // errorSetters[key](data[key][0]);
                                     }
                                 }
-                                else if (Object.keys(errorSetters).indexOf(key) >= 0){
-                                    errorSetters[key]("");
-                                }
+                                // else if (Object.keys(errorSetters).indexOf(key) >= 0){
+                                //     errorSetters[key]("");
+                                // }
                             }
                             if(!err){
                                 Swal.fire({

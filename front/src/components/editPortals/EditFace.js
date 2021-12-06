@@ -16,15 +16,15 @@ const defaultFormData = {
 export default function EditFace(){
     const [formData, setFormData] = useState(defaultFormData);
 
-    const [faceNameError, setFaceNameError] = useState("");
-    const [descriptionError, setDescriptionError] = useState("");
-    const [featureIDError, setFeatureIDError] = useState("");
+    // const [faceNameError, setFaceNameError] = useState("");
+    // const [descriptionError, setDescriptionError] = useState("");
+    // const [featureIDError, setFeatureIDError] = useState("");
 
-    const errorSetters = {
-        face_name: setFaceNameError,
-        decription: setDescriptionError,
-        feature_id: setFeatureIDError,
-    }
+    // const errorSetters = {
+    //     face_name: setFaceNameError,
+    //     decription: setDescriptionError,
+    //     feature_id: setFeatureIDError,
+    // }
 
     return (
         <Container>
@@ -88,12 +88,12 @@ export default function EditFace(){
                                 if(Object.keys(data).indexOf(key) >= 0){
                                     if(Object.prototype.toString.call(data[key]) === "[object Array]"){
                                         err = true;
-                                        errorSetters[key](data[key][0]);
+                                        // errorSetters[key](data[key][0]);
                                     }
                                 }
-                                else if (Object.keys(errorSetters).indexOf(key) >= 0){
-                                    errorSetters[key]("");
-                                }
+                                // else if (Object.keys(errorSetters).indexOf(key) >= 0){
+                                //     errorSetters[key]("");
+                                // }
                             }
                             if(!err){
                                 Swal.fire({

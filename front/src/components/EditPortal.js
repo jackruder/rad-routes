@@ -2,15 +2,12 @@ import React, { useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import Swal from 'sweetalert2';
 
 import EditClimb from './editPortals/EditClimb.js';
 import EditArea from './editPortals/EditArea.js';
 import EditFeature from './editPortals/EditFeature.js';
 import EditFace from './editPortals/EditFace.js';
 import EditBook from './editPortals/EditBook.js';
-
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 export default function EditPortal(){
 

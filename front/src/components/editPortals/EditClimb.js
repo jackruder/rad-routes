@@ -19,21 +19,21 @@ const defaultFormData = {
 export default function EditClimb(){
     const [formData, setFormData] = useState(defaultFormData);
 
-    const [nameError, setNameError] = useState("");
-    const [typeError, setTypeError] = useState("");
-    const [gradeError, setGradeError] = useState("");
-    const [faceError, setFaceError] = useState("");
-    const [heightError, setHeightError] = useState("");
-    const [descriptionError, setDescriptionError] = useState("");
+    // const [nameError, setNameError] = useState("");
+    // const [typeError, setTypeError] = useState("");
+    // const [gradeError, setGradeError] = useState("");
+    // const [faceError, setFaceError] = useState("");
+    // const [heightError, setHeightError] = useState("");
+    // const [descriptionError, setDescriptionError] = useState("");
 
-    const errorSetters = {
-        climb_name: setNameError,
-        climb_type: setTypeError,
-        grade: setGradeError,
-        face_id: setFaceError,
-        height: setHeightError,
-        decription: setDescriptionError,
-    }
+    // const errorSetters = {
+    //     climb_name: setNameError,
+    //     climb_type: setTypeError,
+    //     grade: setGradeError,
+    //     face_id: setFaceError,
+    //     height: setHeightError,
+    //     decription: setDescriptionError,
+    // }
 
     return (
         <Container>
@@ -83,7 +83,7 @@ export default function EditClimb(){
                 </Form.Group> */}
 
                 <Form.Group className="mb-3" controlId="height">
-                    <Form.Label>Height</Form.Label>
+                    <Form.Label>Height (m)</Form.Label>
                     <Form.Control type="text" placeholder="" 
                         onInput={e => {
                             let newData = formData;
@@ -126,17 +126,20 @@ export default function EditClimb(){
                         .then(data => {
                             console.log(data);
                             let err = false;
+
+                            // check for errors from the api
                             for(let key of Object.keys(formData)){
                                 if(Object.keys(data).indexOf(key) >= 0){
                                     if(Object.prototype.toString.call(data[key]) === "[object Array]"){
                                         err = true;
-                                        errorSetters[key](data[key][0]);
+                                        // errorSetters[key](data[key][0]);
                                     }
                                 }
-                                else if (Object.keys(errorSetters).indexOf(key) >= 0){
-                                    errorSetters[key]("");
-                                }
+                                // else if (Object.keys(errorSetters).indexOf(key) >= 0){
+                                //     errorSetters[key]("");
+                                // }
                             }
+
                             if(!err){
                                 Swal.fire({
                                     icon: 'success',

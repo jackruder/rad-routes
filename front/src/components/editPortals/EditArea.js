@@ -16,13 +16,13 @@ const defaultFormData = {
 export default function EditArea(){
     const [formData, setFormData] = useState(defaultFormData);
 
-    const [areaError, setAreaError] = useState("");
-    const [descriptionError, setDescriptionError] = useState("");
+    // const [areaError, setAreaError] = useState("");
+    // const [descriptionError, setDescriptionError] = useState("");
 
-    const errorSetters = {
-        area: setAreaError,
-        decription: setDescriptionError,
-    }
+    // const errorSetters = {
+    //     area: setAreaError,
+    //     decription: setDescriptionError,
+    // }
 
     return (
         <Container>
@@ -70,12 +70,12 @@ export default function EditArea(){
                                 if(Object.keys(data).indexOf(key) >= 0){
                                     if(Object.prototype.toString.call(data[key]) === "[object Array]"){
                                         err = true;
-                                        errorSetters[key](data[key][0]);
+                                        // errorSetters[key](data[key][0]);
                                     }
                                 }
-                                else if (Object.keys(errorSetters).indexOf(key) >= 0){
-                                    errorSetters[key]("");
-                                }
+                                // else if (Object.keys(errorSetters).indexOf(key) >= 0){
+                                //     errorSetters[key]("");
+                                // }
                             }
                             if(!err){
                                 Swal.fire({
