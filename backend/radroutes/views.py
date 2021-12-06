@@ -82,7 +82,8 @@ class CreateListAllClimbs(ListCreateAPIView):
         else:
             if not self.request.user.is_authenticated:
                 return Climb.objects.filter(
-                    face_id__feature_id__area_id__book_id__listed=True
+                    Q(face_id__feature_id__area_id__book_id__listed=True),
+                    Q(face_id__feature_id__area_id__book_id__public=True),
                 )
             else:
                 b = Climb.objects.raw(
@@ -90,8 +91,8 @@ class CreateListAllClimbs(ListCreateAPIView):
                     [self.request.user.username],
                 )
                 q = Climb.objects.filter(
-                    Q(face_id__feature_id__area_id__book_id__author=self.request.user) |
-                    Q(face__id__feature_id__area_id__book_id__listed=True)
+                    Q(face_id__feature_id__area_id__book_id__author=self.request.user)
+                    | Q(face__id__feature_id__area_id__book_id__listed=True)
                 )
                 return b.union(q)
 
@@ -119,8 +120,8 @@ class RetrieveUpdateDestroyAllClimb(RetrieveUpdateDestroyAPIView):
                     [self.request.user.username],
                 )
                 q = Climb.objects.filter(
-                    Q(face_id__feature_id__area_id__book_id__author=self.request.user) |
-                    Q(face__id__feature_id__area_id__book_id__public=True),
+                    Q(face_id__feature_id__area_id__book_id__author=self.request.user)
+                    | Q(face__id__feature_id__area_id__book_id__public=True),
                 )
                 return b.union(q)
 
