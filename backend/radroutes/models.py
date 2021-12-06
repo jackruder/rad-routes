@@ -56,9 +56,10 @@ class Book(models.Model):
         null=True, blank=True, validators=[validate_star_rating]
     )
     grade_hist = models.TextField()  # comma delimited x-axis values to use for grades
-    
+
     def __str__(self):
         return "%s" % (self.book_name)
+
     def containing_book(self):
         return self
 
@@ -74,6 +75,7 @@ class Area(models.Model):
 
     def __str__(self):
         return "%s" % (self.area_name)
+
     def containing_book(self):
         return self.book_id
 
@@ -126,6 +128,7 @@ class Climb(models.Model):
     description = models.TextField(
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
     )  # descriptions might be pretty long. We can determine more precise enforcement at the api layer
+    image = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return "%s" % (self.climb_name)
