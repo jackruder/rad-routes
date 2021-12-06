@@ -7,13 +7,13 @@ import Swal from 'sweetalert2';
 const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 const defaultFormData = {
+    author: 4,
     climb_name: null,
     climb_type: null,
+    face_id: 1,
     grade: null,
-    face_id: null,
     height: null,
     description: null,
-    author: "bodine"
 }
 
 export default function EditClimb(){
@@ -71,7 +71,7 @@ export default function EditClimb(){
                     />
                 </Form.Group>
 
-                <Form.Group className="mb-3" controlId="face_id">
+                {/* <Form.Group className="mb-3" controlId="face_id">
                     <Form.Label>Face</Form.Label>
                     <Form.Control type="text" placeholder="" 
                         onInput={e => {
@@ -80,7 +80,7 @@ export default function EditClimb(){
                             setFormData(newData);
                         }}
                     />
-                </Form.Group>
+                </Form.Group> */}
 
                 <Form.Group className="mb-3" controlId="height">
                     <Form.Label>Height</Form.Label>
@@ -141,7 +141,7 @@ export default function EditClimb(){
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Climb Created',
-                                    text: `Success!, ${formData.first_name} 🧗`
+                                    text: `Successfully created ${formData.climb_name}`
                                 });
                             }
                         })

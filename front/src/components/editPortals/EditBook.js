@@ -7,83 +7,76 @@ import Swal from 'sweetalert2';
 const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 const defaultFormData = {
-    feature_name: null,
-    feature_description: null,
-    gps: null,
-    location: null,
+    book_name: null,
+    book_description: null,
     author: 4,
-    area_id: 1,
+    public: false,
+    listed: false,
+    grade_hist: "1, 4, 3",
 }
 
-export default function EditFeature(){
+export default function EditBook(){
     const [formData, setFormData] = useState(defaultFormData);
 
-    const [featureNameError, setFeatureNameError] = useState("");
-    const [featureDescriptionError, setFeatureDescriptionError] = useState("");
-    const [gpsError, setGpsError] = useState("");
-    const [locationError, setLocationError] = useState("");
-
     const errorSetters = {
-        feature_name: setFeatureNameError,
-        feature_description: setFeatureDescriptionError,
-        gps: setGpsError,
-        location: setLocationError,
     }
 
     return (
         <Container>
-        <Form style={{ margin: 'auto'}}>
-            <Form.Group className="mb-3" controlId="feature_name">
-                <Form.Label>Feature Name</Form.Label>
-                <Form.Control type="text" placeholder="" 
+            <Form style={{ margin: 'auto'}}>
+                <Form.Group className="mb-3" controlId="area">
+                    <Form.Label>Book Name</Form.Label>
+                    <Form.Control type="text" placeholder="" 
+                        onInput={e => {
+                            let newData = formData;
+                            newData.book_name = e.target.value;
+                            setFormData(newData);
+                        }}
+                    />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="book_description">
+                    <Form.Label>Book Description</Form.Label>
+                    <Form.Control as="textarea" rows={3} 
+                        onInput={e => {
+                            let newData = formData;
+                            newData.book_description = e.target.value;
+                            setFormData(newData);
+                        }}
+                    />
+                </Form.Group>
+
+                <Form.Check 
+                    type={'checkbox'}
+                    id={`public`}
+                    label={`Public?`}
                     onInput={e => {
                         let newData = formData;
-                        newData.feature_name = e.target.value;
+                        newData.public = e.target.checked;
                         setFormData(newData);
                     }}
                 />
-            </Form.Group>
 
-            <Form.Group className="mb-3" controlId="feature_description">
-                <Form.Label>Description</Form.Label>
-                <Form.Control as="textarea" rows={3} 
+                <Form.Check 
+                    type={'checkbox'}
+                    id={`listed`}
+                    label={`Listed?`}
                     onInput={e => {
                         let newData = formData;
-                        newData.feature_description = e.target.value;
+                        newData.listed = e.target.checked;
                         setFormData(newData);
                     }}
                 />
-            </Form.Group>
 
-            <Form.Group className="mb-3" controlId="gps">
-                <Form.Label>GPS</Form.Label>
-                <Form.Control type="text" placeholder="" 
-                    onInput={e => {
-                        let newData = formData;
-                        newData.gps = e.target.value;
-                        setFormData(newData);
-                    }}
-                />
-            </Form.Group>
+                <br />
 
-            <Form.Group className="mb-3" controlId="location">
-                <Form.Label>Location</Form.Label>
-                <Form.Control as="textarea" rows={3} 
-                    onInput={e => {
-                        let newData = formData;
-                        newData.location = e.target.value;
-                        setFormData(newData);
-                    }}
-                />
-            </Form.Group>
-
-            <Button 
+                <Button 
                     variant="primary" 
                     type="submit"
                     onClick={e => {
                         e.preventDefault();
 
-                        fetch(`${apiUrlBase}/features/`, {
+                        fetch(`${apiUrlBase}/books/`, {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -108,8 +101,8 @@ export default function EditFeature(){
                             if(!err){
                                 Swal.fire({
                                     icon: 'success',
-                                    title: 'Feature Created',
-                                    text: `Successfully created ${formData.face_name}`
+                                    title: 'Book Created',
+                                    text: `Successfully created ${formData.book_name}`
                                 });
                             }
                         })
@@ -120,7 +113,7 @@ export default function EditFeature(){
                 >
                     Save Changes
                 </Button>
-        </Form>
-    </Container>
+            </Form>
+        </Container>
     )
 }
