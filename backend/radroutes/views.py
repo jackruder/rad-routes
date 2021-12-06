@@ -78,7 +78,7 @@ class CreateListAllClimbs(ListCreateAPIView):
 
     def get_queryset(self):
         if self.request.user.is_superuser:
-            return True
+            return Climb.objects.all()
         else:
             if not self.request.user.is_authenticated:
                 return Climb.objects.filter(
@@ -87,12 +87,15 @@ class CreateListAllClimbs(ListCreateAPIView):
                 )
             else:
                 b = Climb.objects.raw(
-                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_FACE NATURAL JOIN radroutes_climb WHERE username=%s",
+                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_FACE NATURAL JOIN radroutes_climb WHERE username=%s",
                     [self.request.user.username],
                 )
                 q = Climb.objects.filter(
                     Q(face_id__feature_id__area_id__book_id__author=self.request.user)
-                    | Q(face__id__feature_id__area_id__book_id__listed=True)
+                    | (
+                        Q(face__id__feature_id__area_id__book_id__public=True)
+                        & Q(face__id__feature_id__area_id__book_id__listed=True)
+                    )
                 )
                 return b.union(q)
 
@@ -116,7 +119,7 @@ class RetrieveUpdateDestroyAllClimb(RetrieveUpdateDestroyAPIView):
                 )
             else:
                 b = Climb.objects.raw(
-                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_FACE NATURAL JOIN radroutes_climb WHERE username=%s",
+                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_FACE NATURAL JOIN radroutes_climb WHERE username=%s",
                     [self.request.user.username],
                 )
                 q = Climb.objects.filter(
@@ -134,7 +137,29 @@ class CreateListAllFaces(ListCreateAPIView):
     permission_classes = [FacePermissions]
 
     serializer_class = FaceSerializer
-    queryset = Face.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Face.objects.all()
+        else:
+            if not self.request.user.is_authenticated:
+                return Face.objects.filter(
+                    Q(feature_id__area_id__book_id__listed=True),
+                    Q(feature_id__area_id__book_id__public=True),
+                )
+            else:
+                b = Face.objects.raw(
+                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_FACE WHERE username=%s",
+                    [self.request.user.username],
+                )
+                q = Face.objects.filter(
+                    Q(feature_id__area_id__book_id__author=self.request.user)
+                    | (
+                        Q(feature_id__area_id__book_id__public=True)
+                        & Q(feature_id__area_id__book_id__listed=True)
+                    )
+                )
+                return b.union(q)
 
 
 class RetrieveUpdateDestroyAllFace(RetrieveUpdateDestroyAPIView):
@@ -147,6 +172,23 @@ class RetrieveUpdateDestroyAllFace(RetrieveUpdateDestroyAPIView):
     serializer_class = FaceSerializer
     queryset = Face.objects.all()
 
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Face.objects.all()
+        else:
+            if not self.request.user.is_authenticated:
+                return Face.objects.filter(feature_id__area_id__book_id__public=True)
+            else:
+                b = Face.objects.raw(
+                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_Area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_FACE WHERE username=%s",
+                    [self.request.user.username],
+                )
+                q = Face.objects.filter(
+                    Q(feature_id__area_id__book_id__author=self.request.user)
+                    | Q(feature_id__area_id__book_id__public=True),
+                )
+                return b.union(q)
+
 
 class CreateListAllFeatures(ListCreateAPIView):
     """
@@ -156,7 +198,29 @@ class CreateListAllFeatures(ListCreateAPIView):
     permission_classes = [FeaturePermissions]
 
     serializer_class = FeatureSerializer
-    queryset = Feature.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Feature.objects.all()
+        else:
+            if not self.request.user.is_authenticated:
+                return Feature.objects.filter(
+                    Q(area_id__book_id__listed=True),
+                    Q(area_id__book_id__public=True),
+                )
+            else:
+                b = Feature.objects.raw(
+                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_area NATURAL JOIN radroutes_Feature WHERE username=%s",
+                    [self.request.user.username],
+                )
+                q = Feature.objects.filter(
+                    Q(area_id__book_id__author=self.request.user)
+                    | (
+                        Q(area_id__book_id__public=True)
+                        & Q(area_id__book_id__listed=True)
+                    )
+                )
+                return b.union(q)
 
 
 class RetrieveUpdateDestroyAllFeature(RetrieveUpdateDestroyAPIView):
@@ -166,8 +230,25 @@ class RetrieveUpdateDestroyAllFeature(RetrieveUpdateDestroyAPIView):
 
     permission_classes = [FeaturePermissions]
 
-    serializer_class = FeatureSerializer
+    serializer_class = FaceSerializer
     queryset = Feature.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Feature.objects.all()
+        else:
+            if not self.request.user.is_authenticated:
+                return Feature.objects.filter(area_id__book_id__public=True)
+            else:
+                b = Feature.objects.raw(
+                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_area NATURAL JOIN radroutes_Feature WHERE username=%s",
+                    [self.request.user.username],
+                )
+                q = Feature.objects.filter(
+                    Q(area_id__book_id__author=self.request.user)
+                    | Q(area_id__book_id__public=True),
+                )
+                return b.union(q)
 
 
 class CreateListAllAreas(ListCreateAPIView):
@@ -178,7 +259,26 @@ class CreateListAllAreas(ListCreateAPIView):
     permission_classes = [AreaPermissions]
 
     serializer_class = AreaSerializer
-    queryset = Area.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Area.objects.all()
+        else:
+            if not self.request.user.is_authenticated:
+                return Area.objects.filter(
+                    Q(book_id__listed=True),
+                    Q(book_id__public=True),
+                )
+            else:
+                b = Area.objects.raw(
+                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_Area WHERE username=%s",
+                    [self.request.user.username],
+                )
+                q = Area.objects.filter(
+                    Q(book_id__author=self.request.user)
+                    | (Q(book_id__public=True) & Q(book_id__listed=True))
+                )
+                return b.union(q)
 
 
 class RetrieveUpdateDestroyAllArea(RetrieveUpdateDestroyAPIView):
@@ -186,11 +286,26 @@ class RetrieveUpdateDestroyAllArea(RetrieveUpdateDestroyAPIView):
     access a single climb, or update or destroy
     """
 
-    serializer_class = AreaSerializer
-
     permission_classes = [AreaPermissions]
+
+    serializer_class = AreaSerializer
     queryset = Area.objects.all()
 
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Area.objects.all()
+        else:
+            if not self.request.user.is_authenticated:
+                return Area.objects.filter(book_id__public=True)
+            else:
+                b = Area.objects.raw(
+                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_area WHERE username=%s",
+                    [self.request.user.username],
+                )
+                q = Area.objects.filter(
+                    Q(book_id__author=self.request.user) | Q(book_id__public=True),
+                )
+                return b.union(q)
 
 class CreateListAllBooks(ListCreateAPIView):
     """
