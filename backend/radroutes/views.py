@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Q
 from guardian.shortcuts import assign_perm
 from rest_framework import mixins, status
 from rest_framework.views import APIView
@@ -161,7 +162,20 @@ class CreateListAllBooks(ListCreateAPIView):
     serializer_class = BookSerializer
 
     permission_classes = [BookPermissions]
-    queryset = Book.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return True
+        else:
+            if not self.request.user.is_authenticated:
+                return Book.objects.filter(Q(listed=True))
+            else:
+                b = Book.objects.raw(
+                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE username=%s",
+                    [self.request.user.username],
+                )
+                q = Book.objects.filter(Q(author=self.request.user), Q(listed=True))
+                return b.union(q)
 
 
 class RetrieveUpdateDestroyAllBook(RetrieveUpdateDestroyAPIView):
@@ -172,7 +186,20 @@ class RetrieveUpdateDestroyAllBook(RetrieveUpdateDestroyAPIView):
     serializer_class = BookSerializer
 
     permission_classes = [BookPermissions]
-    queryset = Book.objects.all()
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return True
+        else:
+            if not self.request.user.is_authenticated:
+                return Book.objects.filter(public=True)
+            else:
+                b = Book.objects.raw(
+                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE username=%s",
+                    [self.request.user.username],
+                )
+                q = Book.objects.filter(Q(author=self.request.user) | Q(public=True))
+                return b.union(q)
 
 
 #
