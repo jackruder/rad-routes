@@ -35,7 +35,7 @@ export default function RadNavbar({ loggedIn, setLoggedIn }) {
                 <Nav.Link onClick={() => navigate("/login")}>Login</Nav.Link>
               </>
               :
-              <NavDropdown title={localStorage.username} id="user-dropdown">
+              <NavDropdown menuVariant="dark" title={localStorage.username} id="user-dropdown">
                 <Nav.Link
                   onClick={() => {
                     for(let item of ["username", "auth_token"]){
@@ -50,6 +50,7 @@ export default function RadNavbar({ loggedIn, setLoggedIn }) {
                 </Nav.Link>
               </NavDropdown>
             }
+            <div style={{minWidth: 100}}></div>
           </Nav>
         </Navbar.Collapse>
       </Container>
