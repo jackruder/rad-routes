@@ -9,8 +9,8 @@ const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.gui
 const defaultFormData = {
     face_name: null,
     description: null,
-    feature_id: 1,
-    author: 4,
+    feature_id: 1,  //TODO
+    author: 4,  //TODO
 }
 
 export default function EditFace(){

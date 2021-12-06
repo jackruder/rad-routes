@@ -11,8 +11,8 @@ const defaultFormData = {
     feature_description: null,
     gps: null,
     location: null,
-    author: 4,
-    area_id: 1,
+    author: 4,  //TODO
+    area_id: 1, //TODO
 }
 
 export default function EditFeature(){
