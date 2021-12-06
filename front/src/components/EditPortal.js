@@ -12,7 +12,7 @@ const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.gui
 
 export default function EditPortal(){
 
-    const [selectedForm, setForm] = useState('Climb');
+    const [selectedForm, setForm] = useState('Area');
 
     const renderForm = React.useCallback(() => {
         switch(selectedForm) {
