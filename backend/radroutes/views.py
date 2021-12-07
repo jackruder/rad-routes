@@ -19,6 +19,7 @@ from .serializers import (
     FeatureSerializer,
     AreaSerializer,
     BookSerializer,
+    BookPostSerializer,
     UserSerializer,
 )
 from .models import (
@@ -271,7 +272,11 @@ class CreateListAllBooks(ListCreateAPIView):
     adds the ability to list and create climb
     """
 
-    serializer_class = BookSerializer
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return BookPostSerializer
+        else:
+            return BookSerializer
 
     permission_classes = [BookPermissions]
 
