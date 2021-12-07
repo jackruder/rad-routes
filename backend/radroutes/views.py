@@ -288,6 +288,9 @@ class CreateListAllBooks(ListCreateAPIView):
                 )
                 return Book.objects.filter(book_id__in=[x.book_id for x in b])
 
+    def perform_create(self, serializer):
+        serializer.save(author=self.request.user)
+
 
 class ListUserLibrary(ListAPIView):
     serializer_class = BookSerializer
