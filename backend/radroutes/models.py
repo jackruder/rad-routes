@@ -111,7 +111,6 @@ class Face(models.Model):
 
 class Climb(models.Model):
     climb_id = models.AutoField(primary_key=True)
-    author = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     climb_name = models.TextField(
         max_length=NAME_MAX_LENGTH
     )  # max length is a concern for exploitation not formatting, so the number is fairly high
