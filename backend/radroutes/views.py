@@ -283,7 +283,7 @@ class CreateListAllBooks(ListCreateAPIView):
                 return Book.objects.filter(Q(listed=True))
             else:
                 b = Book.objects.raw(
-                    "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User WHERE user_id=%s UNION SELECT book_id from radroutes_book WHERE author_id=%s",
+                    "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User WHERE user_id=%s UNION SELECT book_id from radroutes_book WHERE author_id=%s OR listed=1",
                     [self.request.user.id, self.request.user.id],
                 )
                 return Book.objects.filter(book_id__in=[x.book_id for x in b])
@@ -322,7 +322,7 @@ class RetrieveUpdateDestroyAllBook(RetrieveUpdateDestroyAPIView):
             else:
                 b = Book.objects.raw(
                     "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select book_id FROM radroutes_book WHERE author_id=%s OR public=1;",
-                    [self.request.user.id],
+                    [self.request.user.id, self.request.user.id],
                 )
                 return Book.objects.filter(book_id__in=[x.book_id for x in b])
 
@@ -371,21 +371,21 @@ class ListAreaClimbsById(GenericAPIView, mixins.ListModelMixin):
 
     def get_queryset(self):
         if not self.request.user.is_authenticated:
-                return Climb.objects.filter(
-                    Q(face=self.kwargs["face_id"]),
-                    Q(face__feature__area__book__listed=True),  ##need to decide here
-                    Q(face__feature__area__book__public=True),
-                )
-            else:
-                b = Climb.objects.raw(
-                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id WHERE area_id=%s) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
-                    [
-                        self.kwargs["face_id"],
-                        self.request.user.id,
-                        self.request.user.id,
-                    ],  ##TODO check escaping here
-                )
-                return Climb.objects.filter(climb_id__in=[x.climb_id for x in b])
+            return Climb.objects.filter(
+                Q(face=self.kwargs["face_id"]),
+                Q(face__feature__area__book__listed=True),  ##need to decide here
+                Q(face__feature__area__book__public=True),
+            )
+        else:
+            b = Climb.objects.raw(
+                "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id WHERE area_id=%s) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                [
+                    self.kwargs["face_id"],
+                    self.request.user.id,
+                    self.request.user.id,
+                ],  ##TODO check escaping here
+            )
+            return Climb.objects.filter(climb_id__in=[x.climb_id for x in b])
 
     serializer_class = ClimbSerializer
 
@@ -401,21 +401,21 @@ class ListFaceClimbsById(GenericAPIView, mixins.ListModelMixin):
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return Climb.objects.filter(
-                Q(face__feature__area=self.kwargs["area_id"]),
+                Q(face=self.kwargs["face_id"]),
                 Q(face__feature__area__book__listed=True),  ##need to decide here
                 Q(face__feature__area__book__public=True),
             )
         else:
 
-            b = Climb.objects.raw( "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN (Select * FROM radroutes_face WHERE face_id=%s) Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
-                    [
-                        self.kwargs["face_id"],
-                        self.request.user.id,
-                        self.request.user.id,
-                    ],  ##TODO check escaping here
-                )
+            b = Climb.objects.raw(
+                "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN (Select * FROM radroutes_face WHERE face_id=%s) Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                [
+                    self.kwargs["face_id"],
+                    self.request.user.id,
+                    self.request.user.id,
+                ],  ##TODO check escaping here
+            )
             return Climb.objects.filter(climb_id__in=[x.climb_id for x in b])
-
 
     serializer_class = ClimbSerializer
 
@@ -445,7 +445,22 @@ class ListBookAreasById(ListCreateAPIView):
     serializer_class = AreaSerializer
 
     def get_queryset(self):
-        return Area.objects.filter(book_id=self.kwargs["book_id"])
+        if not self.request.user.is_authenticated:
+            return Area.objects.filter(
+                Q(book=self.kwargs["book_id"]),
+                Q(book__listed=True),  ##need to decide here
+                Q(book__public=True),
+            )
+        else:
+            b = Area.objects.raw(
+                "With cTable As (SELECT * FROM (Select * FROM radroutes_book INNER JOIN radroutes_area ON radroutes_area.book_id = radroutes_book.book_id) WHERE book_id=%s) SELECT area_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select area_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                [
+                    self.kwargs["book_id"],
+                    self.request.user.id,
+                    self.request.user.id,
+                ],  ##TODO check escaping here
+            )
+            return Area.objects.filter(area_id__in=[x.area_id for x in b])
 
 
 class ListAreaFeaturesById(ListCreateAPIView):
