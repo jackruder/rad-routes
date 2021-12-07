@@ -45,7 +45,7 @@ jobs:
         run: |
           pwd
           cd backend
-          python manage.py runserver
+          SECRET_KEY=${{ secrets.SECRET_KEY }} python manage.py runserver
       
       - name: Run Tests
         run: |
