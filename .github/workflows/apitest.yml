@@ -41,15 +41,10 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
       
-      - name: Start Django Server
+      - name: Start Django Server and Run Tests
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
           pwd
           cd backend
-          python manage.py runserver
-      
-      - name: Run Tests
-        run: |
-          sleep 5
-          python -m pytest apitest.py
+          python manage.py runserver & (sleep 5 && cd .. && pytest apitest.py && killall python3)
