@@ -372,7 +372,7 @@ class ListAreaClimbsById(GenericAPIView, mixins.ListModelMixin):
     def get_queryset(self):
         if not self.request.user.is_authenticated:
             return Climb.objects.filter(
-                Q(face=self.kwargs["face_id"]),
+                Q(face__feature__area=self.kwargs["area_id"]),
                 Q(face__feature__area__book__listed=True),  ##need to decide here
                 Q(face__feature__area__book__public=True),
             )
@@ -380,7 +380,7 @@ class ListAreaClimbsById(GenericAPIView, mixins.ListModelMixin):
             b = Climb.objects.raw(
                 "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id WHERE area_id=%s) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
                 [
-                    self.kwargs["face_id"],
+                    self.kwargs["area_id"],
                     self.request.user.id,
                     self.request.user.id,
                 ],  ##TODO check escaping here
@@ -408,7 +408,7 @@ class ListFaceClimbsById(GenericAPIView, mixins.ListModelMixin):
         else:
 
             b = Climb.objects.raw(
-                "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN (Select * FROM radroutes_face WHERE face_id=%s) Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As (SELECT * FROM (Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) WHERE face_id=%s) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
                 [
                     self.kwargs["face_id"],
                     self.request.user.id,
@@ -429,7 +429,23 @@ class ListBookClimbsById(GenericAPIView, mixins.ListModelMixin):
     permission_classes = [ClimbPermissions]
 
     def get_queryset(self):
-        return Climb.objects.filter(face__feature__area__book_id=self.kwargs["book_id"])
+        if not self.request.user.is_authenticated:
+            return Climb.objects.filter(
+                Q(face__feature__area__book=self.kwargs["book_id"]),
+                Q(face__feature__area__book__listed=True),  ##need to decide here
+                Q(face__feature__area__book__public=True),
+            )
+        else:
+
+            b = Climb.objects.raw(
+                "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As (SELECT * FROM (Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) WHERE book_id=%s) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                [
+                    self.kwargs["book_id"],
+                    self.request.user.id,
+                    self.request.user.id,
+                ],  ##TODO check escaping here
+            )
+            return Climb.objects.filter(climb_id__in=[x.climb_id for x in b])
 
     serializer_class = ClimbSerializer
 
