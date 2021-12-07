@@ -43,10 +43,10 @@ jobs:
       
       - name: Start Django Server
         run: |
-          cd ~/backend
+          pwd
+          cd backend
           python manage.py runserver
       
       - name: Run Tests
         run: |
-          cd ~
           python -m pytest apitest.py
