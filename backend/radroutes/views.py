@@ -521,3 +521,13 @@ class ListCreateBookReviewsByBook(ListCreateAPIView):
 
     def get_queryset(self):
         return BookReview.objects.filter(book_id=self.kwargs["book_id"])
+
+
+class ListOwnBooks(ListAPIView):
+    serializer_class = BookSerializer
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Book.objects.none()
+        else:
+            return Book.objects.filter(author_id=self.request.user.id)

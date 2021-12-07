@@ -23,7 +23,8 @@ from .views import (
     ListAreaFeaturesById,
     ListCreateBookReviewsByBook,
     UserLogout,
-    ListUserLibrary
+    ListUserLibrary,
+    ListOwnBooks,
 )
 
 urlpatterns = [
@@ -55,5 +56,8 @@ urlpatterns = [
     # token authorization
     path("authorization/", obtain_auth_token),
     path("login/", include("rest_framework.urls")),
-    path("library/", ListUserLibrary.as_view())
+    path("library/", ListUserLibrary.as_view()),
+    path(
+        "owned/", ListOwnBooks.as_view()
+    ),  # Get books that the user owns, i.e. book.author = user
 ]
