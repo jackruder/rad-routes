@@ -15,6 +15,7 @@ class ClimbSerializer(serializers.ModelSerializer):
             "quality",
             "height",
             "description",
+            "image"
         )
 
 
