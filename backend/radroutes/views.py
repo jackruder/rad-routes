@@ -73,9 +73,24 @@ class CreateListAllClimbs(ListCreateAPIView):
 
     serializer_class = ClimbSerializer
 
-    def perform_create(self, serializer):
-        instance = serializer.save()
-        assign_perm("delete_message", self.request.user, instance)
+    def create(self, serializer):
+        if (
+            Face.objects.get(
+                face_id=self.request.data.get("face")
+            ).feature.area.book.author
+            == self.request.user
+        ):
+            serializer = ClimbSerializer(data=self.request.data)
+            if serializer.is_valid():
+                self.perform_create(serializer)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(
+                "invalid credentials provided",
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
     def get_queryset(self):
         if self.request.user.is_superuser:
@@ -125,6 +140,25 @@ class CreateListAllFaces(ListCreateAPIView):
     permission_classes = [FacePermissions]
 
     serializer_class = FaceSerializer
+
+    def create(self, serializer):
+        if (
+            Feature.objects.get(
+                feature_id=self.request.data.get("feature")
+            ).area.book.author
+            == self.request.user
+        ):
+            serializer = FaceSerializer(data=self.request.data)
+            if serializer.is_valid():
+                self.perform_create(serializer)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(
+                "invalid credentials provided",
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
     def get_queryset(self):
         if self.request.user.is_superuser:
@@ -176,6 +210,23 @@ class CreateListAllFeatures(ListCreateAPIView):
 
     serializer_class = FeatureSerializer
 
+    def create(self, serializer):
+        if (
+            Area.objects.get(area_id=self.request.data.get("area")).book.author
+            == self.request.user
+        ):
+            serializer = FeatureSerializer(data=self.request.data)
+            if serializer.is_valid():
+                self.perform_create(serializer)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(
+                "invalid credentials provided",
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
     def get_queryset(self):
         if self.request.user.is_superuser:
             return Feature.objects.all()
@@ -211,7 +262,7 @@ class RetrieveUpdateDestroyAllFeature(RetrieveUpdateDestroyAPIView):
                 return Feature.objects.filter(area__book__public=True)
             else:
                 b = Feature.objects.raw(
-                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT feature_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION feature_id FROM cTable WHERE author_id=%s OR public=1;",
+                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT feature_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select feature_id FROM cTable WHERE author_id=%s OR public=1;",
                     [self.request.user.id, self.request.user.id],
                 )
                 return Feature.objects.filter(feature_id__in=[x.feature_id for x in b])
@@ -225,6 +276,23 @@ class CreateListAllAreas(ListCreateAPIView):
     permission_classes = [AreaPermissions]
 
     serializer_class = AreaSerializer
+
+    def create(self, *args, **kwargs):
+        if (
+            Book.objects.get(book_id=self.request.data.get("book")).author
+            == self.request.user
+        ):
+            serializer = AreaSerializer(data=self.request.data)
+            if serializer.is_valid():
+                self.perform_create(serializer)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(
+                "invalid credentials provided {}".format(self.request.data.get("book")),
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
 
     def get_queryset(self):
         if self.request.user.is_superuser:
