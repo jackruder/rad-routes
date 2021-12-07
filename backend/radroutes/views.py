@@ -49,7 +49,7 @@ class UserListView(ListCreateAPIView):
 
 
 class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    lookup_field = "username"
+    lookup_field = "pk"
     queryset = User.objects.all()
     serializer_class = UserSerializer
 

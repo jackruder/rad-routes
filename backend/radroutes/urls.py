@@ -36,7 +36,7 @@ urlpatterns = [
     path("areas/", CreateListAllAreas.as_view()),
     path("books/", CreateListAllBooks.as_view()),
     # individual objects (put to update, get for individual object)
-    path("users/<str:username>/", UserRetrieveUpdateDestroyView().as_view()),
+    path("users/<int:pk>/", UserRetrieveUpdateDestroyView().as_view()),
     path("climbs/<int:pk>/", RetrieveUpdateDestroyAllClimb.as_view()),
     path("faces/<int:pk>/", RetrieveUpdateDestroyAllFace.as_view()),
     path("features/<int:pk>/", RetrieveUpdateDestroyAllFeature.as_view()),

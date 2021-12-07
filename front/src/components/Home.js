@@ -45,7 +45,6 @@ export default function Home() {
                                 }}>
                                 <Button variant="dark">{btn.text}</Button>
                             </Col>
-                            // TODO add vertical padding here
                         ))}
                     </Row>
                     
