@@ -1,4 +1,3 @@
-- API: route that gives all books editable by the user making the request
 - UI: creation forms should include a select for the parent
     top-down:
     select book from list of books you can edit, then area within that book, then feature, then face.

@@ -41,6 +41,12 @@ jobs:
         run: |
           python -m pip install -r requirements.txt
       
+      - name: Start Django Server
+        run: |
+          cd ~/backend
+          python manage.py runserver
+      
       - name: Run Tests
         run: |
+          cd ~
           python -m pytest apitest.py
