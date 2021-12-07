@@ -15,7 +15,7 @@ class ClimbSerializer(serializers.ModelSerializer):
             "quality",
             "height",
             "description",
-            "image"
+            "image",
         )
 
 
@@ -58,6 +58,19 @@ class BookSerializer(serializers.ModelSerializer):
             "book_name",
             "book_description",
             "author",
+            "public",
+            "listed",
+            "quality_max",
+            "grade_hist",
+        )
+
+
+class BookPostSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = (
+            "book_name",
+            "book_description",
             "public",
             "listed",
             "quality_max",
