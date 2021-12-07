@@ -377,6 +377,8 @@ class ListAreaClimbsById(GenericAPIView, mixins.ListModelMixin):
                 Q(face__feature__area__book__public=True),
             )
         else:
+            if self.request.user.is_superuser:
+                return Climb.objects.filter(face__feature__area=self.kwargs["area_id"])
             b = Climb.objects.raw(
                 "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id WHERE area_id=%s) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
                 [
@@ -406,7 +408,8 @@ class ListFaceClimbsById(GenericAPIView, mixins.ListModelMixin):
                 Q(face__feature__area__book__public=True),
             )
         else:
-
+            if self.request.user.is_superuser:
+                return Climb.objects.filter(face=self.kwargs["face_id"])
             b = Climb.objects.raw(
                 "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As (SELECT * FROM (Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) WHERE face_id=%s) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
                 [
@@ -436,7 +439,10 @@ class ListBookClimbsById(GenericAPIView, mixins.ListModelMixin):
                 Q(face__feature__area__book__public=True),
             )
         else:
-
+            if self.request.user.is_superuser:
+                return Climb.objects.filter(
+                    face__feature__area__book=self.kwargs["book_id"]
+                )
             b = Climb.objects.raw(
                 "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As (SELECT * FROM (Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) WHERE book_id=%s) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
                 [
@@ -468,6 +474,8 @@ class ListBookAreasById(ListCreateAPIView):
                 Q(book__public=True),
             )
         else:
+            if self.request.user.is_superuser:
+                return Area.objects.filter(book=self.kwargs["book_id"])
             b = Area.objects.raw(
                 "With cTable As (SELECT * FROM (Select * FROM radroutes_book INNER JOIN radroutes_area ON radroutes_area.book_id = radroutes_book.book_id) WHERE book_id=%s) SELECT area_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select area_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
                 [
@@ -494,6 +502,8 @@ class ListAreaFeaturesById(ListCreateAPIView):
                 Q(area__book__public=True),
             )
         else:
+            if self.request.user.is_superuser:
+                return Feature.objects.filter(area=self.kwargs["area_id"])
             b = Feature.objects.raw(
                 "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature WHERE area_id=%s), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT feature_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select feature_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
                 [
