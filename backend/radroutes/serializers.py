@@ -8,7 +8,6 @@ class ClimbSerializer(serializers.ModelSerializer):
         model = Climb
         fields = (
             "climb_id",
-            "author",
             "climb_name",
             "climb_type",
             "face",
