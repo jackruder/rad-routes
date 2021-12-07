@@ -1,43 +1,39 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import { apiUrlBase, getAuth } from '../../util';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import Face from './Face';
-
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
-
-const getAuth = () => {
-    if(Object.keys(localStorage).indexOf("auth_token") >= 0){
-        return localStorage.auth_token;
-    }
-    if(Object.keys(sessionStorage).indexOf("auth_token") >= 0){
-        return sessionStorage.auth_token;
-    }
-    return null;
-}
+import FeatureCard from '../Card/FeatureCard';
 
 export default function BookList({ loggedIn }){
-    const [faceList, setFaceList] = useState([]);
+    const [featureList, setFeatureList] = useState([]);
+
+    const { id } = useParams();
 
     useEffect(() => {
         const token = getAuth();
         const headers = token ? {
             "Authorization": `Token ${token}`
         } : null;
-        fetch(`${apiUrlBase}/faces/`, {
+
+        const url =  id ? `${apiUrlBase}/areas/${id}/features/` : `${apiUrlBase}/features/`;
+
+        fetch(url, {
             method: 'GET',
             headers: headers
         })
         .then(res => res.json())
-        .then(data => setFaceList(data))
+        .then(data => setFeatureList(data))
         .catch(e => console.log(e));
-    }, []);
+    }, [id]);
 
     return (
-        faceList.length > 0 ?
+        featureList.length > 0 ?
         <Row xs={1} md={2} style={{ width: '100%' }}>
-            {faceList.map((face, idx) => (
+            {featureList.map((feature, idx) => (
                 <Col
                     key={idx}
                     style={{
@@ -45,16 +41,16 @@ export default function BookList({ loggedIn }){
                         justifyContent: 'center'
                     }}
                 >
-                    <Face data={face}/>
+                    <FeatureCard data={feature}/>
                 </Col>
             ))}
         </Row>
         :
         (
             loggedIn ?
-            <div style={{textAlign: 'center'}}>No Books Available</div>
+            <div style={{textAlign: 'center'}}>No Features Available</div>
             :
-            <div style={{textAlign: 'center'}}>Log in to see available faces</div>
+            <div style={{textAlign: 'center'}}>Log in to see available features</div>
         )
     )
 }

@@ -1,1 +1,8 @@
-- PRIVACY: public user list should not include emails
+- API: route that gives all books editable by the user making the request
+- UI: creation forms should include a select for the parent
+    top-down:
+    select book from list of books you can edit, then area within that book, then feature, then face.
+    similar hierarchy for creating a new face, feature, or area.
+- UI: make author page, where all their guidebooks are listed
+- API: public user list should not include emails
+- TESTING: flesh out apitest.py

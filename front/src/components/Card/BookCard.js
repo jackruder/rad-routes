@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Card from 'react-bootstrap/Card';
 
 export default function Book({ data }) {
   const bookObj = data;
+  const navigate = useNavigate();
 
   return (
     Object.keys(bookObj).length > 1 ?
@@ -18,7 +20,7 @@ export default function Book({ data }) {
           <Card.Text style={{ marginTop: '1rem' }}>{bookObj.book_description}</Card.Text>
           Best Quality: <b>{bookObj.quality_max}</b> <br/>
           <Card.Link>Author</Card.Link><br/>
-          <Card.Link>Areas</Card.Link><br/>
+          <Card.Link onClick={() => navigate(`/books/${bookObj.book_id}`)}>Areas</Card.Link><br/>
         </Card.Body>
     </Card> : <>This Climb Does Not Exist</>
   )

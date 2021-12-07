@@ -1,38 +1,43 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import { getAuth, apiUrlBase } from '../../util';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import Area from './Area';
+import AreaCard from '../Card/AreaCard';
 
-export const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
-
-export const getAuth = () => {
-    if(Object.keys(localStorage).indexOf("auth_token") >= 0){
-        return localStorage.auth_token;
-    }
-    if(Object.keys(sessionStorage).indexOf("auth_token") >= 0){
-        return sessionStorage.auth_token;
-    }
-    return null;
-}
-
-export default function AreaList({ loggedIn }){
+export default function AreaList({ loggedIn, bookId, onPage }){
     const [areaList, setAreaList] = useState([]);
+
+    const { id } = useParams();
 
     useEffect(() => {
         const token = getAuth();
         const headers = token ? {
             "Authorization": `Token ${token}`
         } : null;
-        fetch(`${apiUrlBase}/areas/`, {
+
+        let url;
+        if(bookId){
+            url = `${apiUrlBase}/books/${bookId}/areas/`
+        }
+        else if(id){
+            url = `${apiUrlBase}/books/${id}/areas/`;
+        }
+        else{
+            url = `${apiUrlBase}/areas/`;
+        }
+
+        fetch(url, {
             method: 'GET',
             headers: headers
         })
         .then(res => res.json())
         .then(data => setAreaList(data))
         .catch(e => console.log(e));
-    }, []);
+    }, [id, bookId]);
 
     return (
         areaList.length > 0 ?
@@ -45,16 +50,16 @@ export default function AreaList({ loggedIn }){
                         justifyContent: 'center'
                     }}
                 >
-                    <Area data={area}/>
+                    <AreaCard data={area} onPage={onPage}/>
                 </Col>
             ))}
         </Row>
         :
         (
             loggedIn ?
-            <div style={{textAlign: 'center'}}>No Books Available</div>
+            <div style={{textAlign: 'center'}}>No Areas Available</div>
             :
-            <div style={{textAlign: 'center'}}>Log in to see available books</div>
+            <div style={{textAlign: 'center'}}>Log in to see available areas</div>
         )
     )
 }

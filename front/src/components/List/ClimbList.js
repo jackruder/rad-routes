@@ -1,38 +1,34 @@
 import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+import { getAuth, apiUrlBase } from '../../util.js'
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import Climb from './Climb';
-
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
-
-const getAuth = () => {
-    if(Object.keys(localStorage).indexOf("auth_token") >= 0){
-        return localStorage.auth_token;
-    }
-    if(Object.keys(sessionStorage).indexOf("auth_token") >= 0){
-        return sessionStorage.auth_token;
-    }
-    return null;
-}
+import ClimbCard from '../Card/ClimbCard';
 
 export default function ClimbList({ loggedIn }){
     const [climbList, setClimbList] = useState([]);
 
+    const { id } = useParams();
+
     useEffect(() => {
-        let token = getAuth();
-        if(!token) return;
-        fetch(`${apiUrlBase}/climbs/`, {
+        const token = getAuth();
+        const headers = token ? {
+            "Authorization": `Token ${token}`
+        } : null;
+
+        const url = id ? `${apiUrlBase}/faces/${id}/climbs/` : `${apiUrlBase}/climbs/`;
+
+        fetch(url, {
             method: 'GET',
-            headers: {
-                "Authorization": `Token ${getAuth()}`
-            }
+            headers: headers
         })
         .then(res => res.json())
         .then(data => setClimbList(data))
         .catch(e => console.log(e));
-    }, []);
+    }, [id]);
 
     return (
         climbList.length > 0 ?
@@ -45,7 +41,7 @@ export default function ClimbList({ loggedIn }){
                         justifyContent: 'center'
                     }}
                 >
-                    <Climb data={climb}/>
+                    <ClimbCard data={climb}/>
                 </Col>
             ))}
         </Row>

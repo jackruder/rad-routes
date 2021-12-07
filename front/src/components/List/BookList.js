@@ -1,21 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
+import { getAuth, apiUrlBase } from '../../util';
+
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
-import Book from './Book';
-
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
-
-const getAuth = () => {
-    if(Object.keys(localStorage).indexOf("auth_token") >= 0){
-        return localStorage.auth_token;
-    }
-    if(Object.keys(sessionStorage).indexOf("auth_token") >= 0){
-        return sessionStorage.auth_token;
-    }
-    return null;
-}
+import BookCard from '../Card/BookCard';
 
 export default function BookList({ loggedIn }){
     const [bookList, setBookList] = useState([]);
@@ -45,7 +35,7 @@ export default function BookList({ loggedIn }){
                         justifyContent: 'center'
                     }}
                 >
-                    <Book data={book}/>
+                    <BookCard data={book}/>
                 </Col>
             ))}
         </Row>
