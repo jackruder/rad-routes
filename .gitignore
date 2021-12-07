@@ -2,3 +2,4 @@
 env
 venv
 server/radroutes/.env
+__pycache__
