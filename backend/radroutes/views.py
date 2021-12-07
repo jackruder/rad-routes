@@ -471,7 +471,22 @@ class ListAreaFeaturesById(ListCreateAPIView):
     serializer_class = FeatureSerializer
 
     def get_queryset(self):
-        return Feature.objects.filter(area_id=self.kwargs["area_id"])
+        if not self.request.user.is_authenticated:
+            return Feature.objects.filter(
+                Q(area=self.kwargs["area_id"]),
+                Q(area__book__listed=True),  ##need to decide here
+                Q(area__book__public=True),
+            )
+        else:
+            b = Feature.objects.raw(
+                "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature WHERE area_id=%s), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT feature_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select feature_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                [
+                    self.kwargs["area_id"],
+                    self.request.user.id,
+                    self.request.user.id,
+                ],  ##TODO check escaping here
+            )
+            return Feature.objects.filter(feature_id__in=[x.feature_id for x in b])
 
 
 class ListCreateBookReviewsByBook(ListCreateAPIView):

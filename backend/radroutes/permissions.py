@@ -33,7 +33,7 @@ class ClimbPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
             return True
-        book = Book.objects.get(book__area__feature__face__climb=obj.climb)
+        book = Book.objects.get(book_id=obj.face.feature.area.book.book_id)
 
         return grantBookReqUser(book, request)
 
@@ -52,7 +52,7 @@ class FacePermissions(permissions.BasePermission):
         if request.user.is_superuser:
             return True
 
-        book = Book.objects.get(book__area__feature__face=obj.face_id)
+        book = Book.objects.get(book_id=obj.feature.area.book.book_id)
         return grantBookReqUser(book, request)
 
 
@@ -70,7 +70,7 @@ class FeaturePermissions(permissions.BasePermission):
         if request.user.is_superuser:
             return True
 
-        book = Book.objects.get(book__area__feature=obj.feature_id)
+        book = Book.objects.get(book_id=obj.area.book.book_id)
         return grantBookReqUser(book, request)
 
 
@@ -88,7 +88,7 @@ class AreaPermissions(permissions.BasePermission):
         if request.user.is_superuser:
             return True
 
-        book = Book.objects.get(book__area=obj.area_id)
+        book = Book.objects.get(book_id=obj.book.book_id)
         return grantBookReqUser(book, request)
 
 
