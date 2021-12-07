@@ -71,7 +71,7 @@ class Area(models.Model):
     area_description = models.TextField(
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
     )
-    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s" % (self.area_name)
@@ -88,7 +88,7 @@ class Feature(models.Model):
     location = models.TextField(
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
     )
-    area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
+    area = models.ForeignKey(Area, on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s" % (self.feature_name)
@@ -100,7 +100,7 @@ class Face(models.Model):
     face_description = models.TextField(
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
     )
-    feature_id = models.ForeignKey(Feature, on_delete=models.CASCADE)
+    feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
     image = models.URLField(
         null=True, blank=True
     )  # PILLOW needs to be installed for this to work
@@ -116,7 +116,7 @@ class Climb(models.Model):
         max_length=NAME_MAX_LENGTH
     )  # max length is a concern for exploitation not formatting, so the number is fairly high
     climb_type = models.TextField(null=True, blank=True, max_length=50)
-    face_id = models.ForeignKey(
+    face = models.ForeignKey(
         Face, null=True, blank=True, on_delete=models.CASCADE
     )  # TODO rewrite this so upon deletion they get added to default face
     grade = models.TextField(null=True, blank=True, max_length=20)
@@ -140,16 +140,16 @@ class AreaEditPermissions(models.Model):
 
 
 class UserPrivateAccess(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (("user_id", "book_id"),)
 
 
 class UserLibrary(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
 
     def __str__(self):
         return "%s library" % (self.user_id.__str__())
@@ -160,7 +160,7 @@ class UserLibrary(models.Model):
 
 class BookReview(models.Model):
     reviewer = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
-    book_id = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     review_body = models.TextField(
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
     )

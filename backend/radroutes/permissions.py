@@ -19,6 +19,7 @@ def grantBookReqUser(book, request):
         if book.author == request.user:
             return True
 
+
 class ClimbPermissions(permissions.BasePermission):
     def has_permission(self, request, view):  # PREVENT WRITE BY UNAUTH
         if request.method not in permissions.SAFE_METHODS:
@@ -32,11 +33,10 @@ class ClimbPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
             return True
-        book = Book.objects.get(
-            book_id__area_id__feature_id__face_id__climb_id=obj.climb_id
-        )
+        book = Book.objects.get(book__area__feature__face__climb=obj.climb)
 
         return grantBookReqUser(book, request)
+
 
 class FacePermissions(permissions.BasePermission):
     def has_permission(self, request, view):  # PREVENT WRITE BY UNAUTH
@@ -52,7 +52,7 @@ class FacePermissions(permissions.BasePermission):
         if request.user.is_superuser:
             return True
 
-        book = Book.objects.get(book_id__area_id__feature_id__face_id=obj.face_id)
+        book = Book.objects.get(book__area__feature__face=obj.face_id)
         return grantBookReqUser(book, request)
 
 
@@ -66,12 +66,11 @@ class FeaturePermissions(permissions.BasePermission):
         else:
             return True
 
-
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
             return True
 
-        book = Book.objects.get(book_id__area_id__feature_id=obj.feature_id)
+        book = Book.objects.get(book__area__feature=obj.feature_id)
         return grantBookReqUser(book, request)
 
 
@@ -85,12 +84,11 @@ class AreaPermissions(permissions.BasePermission):
         else:
             return True
 
-
     def has_object_permission(self, request, view, obj):
         if request.user.is_superuser:
             return True
 
-        book = Book.objects.get(book_id__area_id=obj.area_id)
+        book = Book.objects.get(book__area=obj.area_id)
         return grantBookReqUser(book, request)
 
 

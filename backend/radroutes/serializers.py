@@ -11,7 +11,7 @@ class ClimbSerializer(serializers.ModelSerializer):
             "author",
             "climb_name",
             "climb_type",
-            "face_id",
+            "face",
             "grade",
             "quality",
             "height",
@@ -26,7 +26,7 @@ class FaceSerializer(serializers.ModelSerializer):
             "face_id",
             "face_name",
             "face_description",
-            "feature_id",
+            "feature",
             "image",  # WHAT DO WE DOOO
         )
 
@@ -40,14 +40,14 @@ class FeatureSerializer(serializers.ModelSerializer):
             "feature_description",
             "gps",
             "location",
-            "area_id",
+            "area",
         )
 
 
 class AreaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Area
-        fields = ("area_id", "area_name", "area_quality", "area_description", "book_id")
+        fields = ("area_id", "area_name", "area_quality", "area_description", "book")
 
 
 class BookSerializer(serializers.ModelSerializer):
