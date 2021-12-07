@@ -45,6 +45,5 @@ jobs:
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
-          pwd
           cd backend
-          python manage.py runserver & (sleep 5 && cd .. && pytest apitest.py && killall python3)
+          python manage.py runserver & (sleep 5 && cd .. && pytest apitest.py)
