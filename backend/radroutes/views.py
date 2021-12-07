@@ -87,8 +87,8 @@ class CreateListAllClimbs(ListCreateAPIView):
                 )
             else:
                 b = Climb.objects.raw(
-                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
-                    [self.request.user.id],
+                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                    [self.request.user.id, self.request.user.id],
                 )
                 return Climb.objects.filter(climb_id__in=[x.climb_id for x in b])
 
@@ -110,8 +110,8 @@ class RetrieveUpdateDestroyAllClimb(RetrieveUpdateDestroyAPIView):
                 return Climb.objects.filter(face__feature__area__book__public=True)
             else:
                 b = Climb.objects.raw(
-                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select climb_id FROM cTable WHERE author_id=%s OR public=1;",
-                    [self.request.user.id],
+                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR public=1;",
+                    [self.request.user.id, self.request.user.id],
                 )
                 return Climb.objects.filter(climb_id__in=[x.climb_id for x in b])
 
@@ -136,10 +136,8 @@ class CreateListAllFaces(ListCreateAPIView):
                 )
             else:
                 b = Face.objects.raw(
-                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT face_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select face_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
-                    [
-                        self.request.user.id
-                    ],
+                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT face_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select face_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                    [self.request.user.id, self.request.user.id],
                 )
                 return Face.objects.filter(face_id__in=[x.face_id for x in b])
 
@@ -162,10 +160,8 @@ class RetrieveUpdateDestroyAllFace(RetrieveUpdateDestroyAPIView):
                 return Face.objects.filter(feature__area__book__public=True)
             else:
                 b = Face.objects.raw(
-                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT face_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select face_id FROM cTable WHERE author_id=%s OR public=1;",
-                    [
-                        self.request.user.id
-                    ],
+                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT face_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select face_id FROM cTable WHERE author_id=%s OR public=1;",
+                    [self.request.user.id, self.request.user.id],
                 )
                 return Face.objects.filter(face_id__in=[x.face_id for x in b])
 
@@ -190,8 +186,8 @@ class CreateListAllFeatures(ListCreateAPIView):
                 )
             else:
                 b = Feature.objects.raw(
-                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT feature_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select feature_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
-                    [self.request.user.id],
+                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT feature_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select feature_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                    [self.request.user.id, self.request.user.id],
                 )
                 return Feature.objects.filter(feature_id__in=[x.feature_id for x in b])
 
@@ -214,8 +210,8 @@ class RetrieveUpdateDestroyAllFeature(RetrieveUpdateDestroyAPIView):
                 return Feature.objects.filter(area__book__public=True)
             else:
                 b = Feature.objects.raw(
-                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT feature_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION feature_id FROM cTable WHERE author_id=%s OR public=1;",
-                    [self.request.user.id],
+                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT feature_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION feature_id FROM cTable WHERE author_id=%s OR public=1;",
+                    [self.request.user.id, self.request.user.id],
                 )
                 return Feature.objects.filter(feature_id__in=[x.feature_id for x in b])
 
@@ -240,8 +236,8 @@ class CreateListAllAreas(ListCreateAPIView):
                 )
             else:
                 b = Area.objects.raw(
-                    "With cTable As ( Select * FROM radroutes_book INNER JOIN radroutes_area ON radroutes_area.book_id = radroutes_book.book_id) SELECT area_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select area_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
-                    [self.request.user.id],
+                    "With cTable As ( Select * FROM radroutes_book INNER JOIN radroutes_area ON radroutes_area.book_id = radroutes_book.book_id) SELECT area_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select area_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                    [self.request.user.id, self.request.user.id],
                 )
                 return Area.objects.filter(area_id__in=[x.area_id for x in b])
 
@@ -264,8 +260,8 @@ class RetrieveUpdateDestroyAllArea(RetrieveUpdateDestroyAPIView):
                 return Area.objects.filter(book__public=True)
             else:
                 b = Area.objects.raw(
-                    "With cTable As ( Select * FROM radroutes_book INNER JOIN radroutes_area ON radroutes_area.book_id = radroutes_book.book_id) SELECT area_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User UNION Select area_id FROM cTable WHERE author_id=%s OR public=1;",
-                    [self.request.user.id],
+                    "With cTable As ( Select * FROM radroutes_book INNER JOIN radroutes_area ON radroutes_area.book_id = radroutes_book.book_id) SELECT area_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User WHERE user_id=%s UNION Select area_id FROM cTable WHERE author_id=%s OR public=1;",
+                    [self.request.user.id, self.request.user.id],
                 )
                 return Area.objects.filter(area_id__in=[x.area_id for x in b])
 
@@ -287,8 +283,8 @@ class CreateListAllBooks(ListCreateAPIView):
                 return Book.objects.filter(Q(listed=True))
             else:
                 b = Book.objects.raw(
-                    "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User UNION SELECT book_id from radroutes_book WHERE author_id=%s",
-                    [self.request.user.id],
+                    "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User WHERE user_id=%s UNION SELECT book_id from radroutes_book WHERE author_id=%s",
+                    [self.request.user.id, self.request.user.id],
                 )
                 return Book.objects.filter(book_id__in=[x.book_id for x in b])
 
@@ -302,8 +298,8 @@ class ListUserLibrary(ListAPIView):
             return Book.objects.filter(Q(listed=True), Q(public=True))
         else:
             b = Book.objects.raw(
-                "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select book_id FROM radroutes_book WHERE author_id=%s OR (public=1 AND listed=1);",
-                [self.request.user.username],
+                "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select book_id FROM radroutes_book WHERE author_id=%s;",
+                [self.request.user.id, self.request.user.id],
             )
             return Book.objects.filter(book_id__in=[x.book_id for x in b])
 
@@ -325,7 +321,7 @@ class RetrieveUpdateDestroyAllBook(RetrieveUpdateDestroyAPIView):
                 return Book.objects.filter(public=True)
             else:
                 b = Book.objects.raw(
-                    "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select book_id FROM radroutes_book WHERE author_id=%s OR public=1;",
+                    "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select book_id FROM radroutes_book WHERE author_id=%s OR public=1;",
                     [self.request.user.id],
                 )
                 return Book.objects.filter(book_id__in=[x.book_id for x in b])
@@ -353,10 +349,11 @@ class ListFeatureClimbsById(GenericAPIView, mixins.ListModelMixin):
                 )
             else:
                 b = Climb.objects.raw(
+                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face Inner Join radroutes_climb ON radroutes_face.face_id = radroutes_climb.face_id), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id WHERE feature_id=%s) SELECT climb_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select climb_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
                     [
                         self.kwargs["feature_id"],
-                        self.request.user.username,
-                        self.request.user.username,
+                        self.request.user.id,
+                        self.request.user.id,
                     ],  ##TODO check escaping here
                 )
                 return Climb.objects.filter(pk__in=[x.pk for x in b])
