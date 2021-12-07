@@ -136,7 +136,8 @@ class CreateListAllFaces(ListCreateAPIView):
                 )
             else:
                 b = Face.objects.raw(
-                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT face_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select face_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);"[
+                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT face_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select face_id FROM cTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                    [
                         self.request.user.id
                     ],
                 )
@@ -161,7 +162,8 @@ class RetrieveUpdateDestroyAllFace(RetrieveUpdateDestroyAPIView):
                 return Face.objects.filter(feature__area__book__public=True)
             else:
                 b = Face.objects.raw(
-                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT face_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select face_id FROM cTable WHERE author_id=%s OR public=1;"[
+                    "With tmp as (Select * From radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_face), cTable As ( Select * FROM radroutes_book INNER JOIN tmp ON tmp.book_id = radroutes_book.book_id) SELECT face_id FROM cTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book UNION Select face_id FROM cTable WHERE author_id=%s OR public=1;",
+                    [
                         self.request.user.id
                     ],
                 )
@@ -351,7 +353,6 @@ class ListFeatureClimbsById(GenericAPIView, mixins.ListModelMixin):
                 )
             else:
                 b = Climb.objects.raw(
-                    "SELECT * FROM radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book NATURAL JOIN radroutes_area NATURAL JOIN radroutes_Feature NATURAL JOIN radroutes_FACE NATURAL JOIN radroutes_climb WHERE feature_id=%s AND (user_id = %s OR author = %s OR (public = 1 AND listed = 1))",
                     [
                         self.kwargs["feature_id"],
                         self.request.user.username,
