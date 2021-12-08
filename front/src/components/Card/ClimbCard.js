@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Card from 'react-bootstrap/Card';
 
@@ -19,8 +20,9 @@ const images = {
   "In-N-Out": "/static/assets/in-n-out.png"
 }
 
-export default function Climb({ data }) {
+export default function Climb({ data, onPage }) {
   const climbObj = data;
+  const navigate = useNavigate();
 
   return (
     Object.keys(climbObj).length > 1 ?
@@ -35,10 +37,11 @@ export default function Climb({ data }) {
 
           <div style={{flexGrow: 1}}>Height: <b>{getHeightString(climbObj.height)}</b></div>
 
-          <div aria-label="Links to the face and feature on which this climb resides.">
-            <Card.Link>Face</Card.Link><br/>
-            <Card.Link>Feature</Card.Link><br/>
-          </div>
+          {!onPage ? 
+            <>
+              <Card.Link onClick={() => navigate(`/faces/${climbObj.face}`)}>Face</Card.Link><br/>
+            </>
+            : <></>}
         </Card.Body>
         <div style={{
           width: '100%',

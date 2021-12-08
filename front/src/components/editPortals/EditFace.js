@@ -1,34 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container'
 import Swal from 'sweetalert2';
+
+import BookSelector from './selectors/BookSelector';
+import AreaSelector from './selectors/AreaSelector';
+import FeatureSelector from './selectors/FeatureSelector';
+import { getAuth, fetchFromApi } from '../../util';
 
 const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 const defaultFormData = {
     face_name: null,
     description: null,
-    feature_id: 1,  //TODO
-    author: 4,  //TODO
+    feature_id: null
 }
 
 export default function EditFace(){
     const [formData, setFormData] = useState(defaultFormData);
 
-    // const [faceNameError, setFaceNameError] = useState("");
-    // const [descriptionError, setDescriptionError] = useState("");
-    // const [featureIDError, setFeatureIDError] = useState("");
+    const [editableBooks, setEditableBooks] = useState(null);
+    const [editableAreas, setEditableAreas] = useState(null);
+    const [editableFeatures, setEditableFeatures] = useState(null);
 
-    // const errorSetters = {
-    //     face_name: setFaceNameError,
-    //     decription: setDescriptionError,
-    //     feature_id: setFeatureIDError,
-    // }
+    useEffect(() => {
+        fetchFromApi(`/owned/`, setEditableBooks);
+    }, [])
 
     return (
+        editableBooks ?
+        <>
+        { editableBooks.length > 0 ?
         <Container>
             <Form style={{ margin: 'auto'}}>
+                <BookSelector editableBooks={editableBooks} setEditableAreas={setEditableAreas} />
+                
+                <AreaSelector editableAreas={editableAreas} setEditableFeatures={setEditableFeatures} />
+
+                <FeatureSelector formData={formData} setFormData={setFormData} editableFeatures={editableFeatures} />
+
                 <Form.Group className="mb-3" controlId="face_name">
                     <Form.Label>Face Name</Form.Label>
                     <Form.Control type="text" placeholder="" 
@@ -45,22 +56,11 @@ export default function EditFace(){
                     <Form.Control as="textarea" rows={3} 
                         onInput={e => {
                             let newData = formData;
-                            newData.description = e.target.value;
+                            newData.face_description = e.target.value;
                             setFormData(newData);
                         }}
                     />
                 </Form.Group>
-
-                {/* <Form.Group className="mb-3" controlId="feature_id">
-                    <Form.Label>Feature</Form.Label>
-                    <Form.Control type="text" placeholder="" 
-                        onInput={e => {
-                            let newData = formData;
-                            newData.feature_id = e.target.value;
-                            setFormData(newData);
-                        }}
-                    />
-                </Form.Group> */}
 
                 <Form.Group controlId="image" className="mb-3">
                     <Form.Label>Face Image</Form.Label>
@@ -73,33 +73,39 @@ export default function EditFace(){
                     onClick={e => {
                         e.preventDefault();
 
+                        const token = getAuth();
+                        let headers = {
+                            'Content-Type': 'application/json'
+                        }
+                        if(token){
+                            headers['Authorization'] = `Token ${token}`;
+                        }
+
                         fetch(`${apiUrlBase}/faces/`, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
+                            headers: headers,
                             body: JSON.stringify(formData)
                         })
-                        .then(res => res.json())
+                        .then(res => {
+                            if(!res.ok && res.status >= 500){
+                                throw Error(res.statusText);
+                            }
+                            return res.json();
+                        })
                         .then(data => {
                             console.log(data);
-                            let err = false;
-                            for(let key of Object.keys(formData)){
-                                if(Object.keys(data).indexOf(key) >= 0){
-                                    if(Object.prototype.toString.call(data[key]) === "[object Array]"){
-                                        err = true;
-                                        // errorSetters[key](data[key][0]);
-                                    }
-                                }
-                                // else if (Object.keys(errorSetters).indexOf(key) >= 0){
-                                //     errorSetters[key]("");
-                                // }
+                            
+                            if(Object.keys(data).indexOf('detail') >= 0){
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: data.detail
+                                });
                             }
-                            if(!err){
+                            else {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Face Created',
-                                    text: `Successfully created ${formData.face_name}`
+                                    text: `Successfully created face ${formData.face_name} (id ${data.face_id})`
                                 });
                             }
                         })
@@ -112,5 +118,9 @@ export default function EditFace(){
                 </Button>
             </Form>
         </Container>
+        : <>Nothing available</>}
+        </>
+        : 
+        <></>
     )
 }

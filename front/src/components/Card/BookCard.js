@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { apiUrlBase, getAuth } from '../../util';
+import { fetchFromApi } from '../../util';
 
 import Card from 'react-bootstrap/Card';
 
@@ -17,22 +17,11 @@ export default function Book({ data }) {
   const [authorObj, setAuthorObj] = useState(defaultAuthorObj);
 
   useEffect(() => {
-    const token = getAuth();
-    const headers = token ? {
-        "Authorization": `Token ${token}`
-    } : null;
-
-    fetch(`${apiUrlBase}/users/${data.author}`, {
-      method: 'GET',
-      headers: headers
-    })
-    .then(res => res.json())
-    .then(data => setAuthorObj(data))
-    .catch(e => console.log(e));
+    fetchFromApi(`/users/${data.author}`, setAuthorObj);
   }, [data])
 
   return (
-    Object.keys(bookObj).length > 1 ?
+    !bookObj || Object.keys(bookObj).length > 1 ?
     <Card
       style={{ width: '36rem', margin: 10 }}
       onClick={() => {

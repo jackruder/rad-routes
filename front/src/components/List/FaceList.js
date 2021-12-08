@@ -1,33 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { getAuth, apiUrlBase } from '../../util';
+import { fetchFromApi } from '../../util';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import FaceCard from '../Card/FaceCard';
 
-export default function BookList({ loggedIn }){
+export default function BookList({ loggedIn, featureId, onPage }){
     const [faceList, setFaceList] = useState([]);
     const { id } = useParams();
 
     useEffect(() => {
-        const token = getAuth();
-        const headers = token ? {
-            "Authorization": `Token ${token}`
-        } : null;
+        let path;
+        if(featureId){
+            path = `/features/${featureId}/faces`
+        }
+        else if(id){
+            path = `/features/${id}/faces`
+        }
+        else{
+            path = "/faces"
+        }
 
-        const url = id ? `${apiUrlBase}/features/${id}/faces` : `${apiUrlBase}/faces`;
-
-        fetch(url, {
-            method: 'GET',
-            headers: headers
-        })
-        .then(res => res.json())
-        .then(data => setFaceList(data))
-        .catch(e => console.log(e));
-    }, [id]);
+        fetchFromApi(path, setFaceList);
+    }, [id, featureId]);
 
     return (
         faceList.length > 0 ?
@@ -40,7 +38,7 @@ export default function BookList({ loggedIn }){
                         justifyContent: 'center'
                     }}
                 >
-                    <FaceCard data={face}/>
+                    <FaceCard onPage={onPage} data={face}/>
                 </Col>
             ))}
         </Row>

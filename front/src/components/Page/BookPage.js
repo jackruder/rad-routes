@@ -32,6 +32,7 @@ export default function BookPage({ loggedIn }){
     const [authorObj, setAuthorObj] = useState(defaultAuthorObj);
 
     useEffect(() => {
+        // cant be done with fetchFromApi because of the fetchAuthor call in the last `then`
         const token = getAuth();
         const headers = token ? {
             "Authorization": `Token ${token}`

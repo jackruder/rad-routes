@@ -1,34 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { getAuth, apiUrlBase } from '../../util.js'
+import { fetchFromApi } from '../../util.js'
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import ClimbCard from '../Card/ClimbCard';
 
-export default function ClimbList({ loggedIn }){
+export default function ClimbList({ loggedIn, faceId, onPage }){
     const [climbList, setClimbList] = useState([]);
 
     const { id } = useParams();
 
     useEffect(() => {
-        const token = getAuth();
-        const headers = token ? {
-            "Authorization": `Token ${token}`
-        } : null;
+        let path;
+        if(faceId){
+            path = `/faces/${faceId}/climbs`
+        }
+        else if(id){
+            path = `/faces/${id}/climbs`
+        }
+        else{
+            path = 'climbs'
+        }
 
-        const url = id ? `${apiUrlBase}/faces/${id}/climbs/` : `${apiUrlBase}/climbs/`;
-
-        fetch(url, {
-            method: 'GET',
-            headers: headers
-        })
-        .then(res => res.json())
-        .then(data => setClimbList(data))
-        .catch(e => console.log(e));
-    }, [id]);
+        fetchFromApi(path, setClimbList);
+    }, [id, faceId]);
 
     return (
         climbList.length > 0 ?
@@ -41,7 +39,7 @@ export default function ClimbList({ loggedIn }){
                         justifyContent: 'center'
                     }}
                 >
-                    <ClimbCard data={climb}/>
+                    <ClimbCard onPage={onPage} data={climb}/>
                 </Col>
             ))}
         </Row>

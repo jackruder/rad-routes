@@ -1,9 +1,11 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import Card from 'react-bootstrap/Card';
 
-export default function Feature({ data }) {
+export default function Feature({ data, onPage }) {
   const featureObj = data;
+  const navigate = useNavigate();
 
   return (
     Object.keys(featureObj).length > 1 ?
@@ -18,8 +20,11 @@ export default function Feature({ data }) {
           <Card.Text style={{ marginTop: '1rem' }}>{featureObj.feature_description}</Card.Text>
           Location: <b>{featureObj.location}</b> <br/>
           GPS: <b>{featureObj.gps}</b> <br/>
-          <Card.Link>Area</Card.Link><br/>
-          <Card.Link>Faces</Card.Link><br/>
+          {!onPage ? 
+            <><Card.Link onClick={() => navigate(`/areas/${featureObj.area}`)}>Area</Card.Link><br/></>
+            :
+            <></>}
+          <Card.Link onClick={() => navigate(`/features/${featureObj.feature_id}`)}>Faces</Card.Link><br/>
         </Card.Body>
     </Card> : <>This Feature Does Not Exist</>
   )

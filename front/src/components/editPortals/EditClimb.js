@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container'
 import Swal from 'sweetalert2';
 
+import BookSelector from './selectors/BookSelector';
+import AreaSelector from './selectors/AreaSelector';
+import FeatureSelector from './selectors/FeatureSelector';
+import FaceSelector from './selectors/FaceSelector';
+
+import { fetchFromApi, getAuth } from '../../util';
+
 const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 const defaultFormData = {
-    author: 4,  //TODO
     climb_name: null,
     climb_type: null,
-    face_id: 1, //TODO
+    face_id: null, //TODO
     grade: null,
     height: null,
     description: null,
@@ -19,25 +25,29 @@ const defaultFormData = {
 export default function EditClimb(){
     const [formData, setFormData] = useState(defaultFormData);
 
-    // const [nameError, setNameError] = useState("");
-    // const [typeError, setTypeError] = useState("");
-    // const [gradeError, setGradeError] = useState("");
-    // const [faceError, setFaceError] = useState("");
-    // const [heightError, setHeightError] = useState("");
-    // const [descriptionError, setDescriptionError] = useState("");
+    const [editableBooks, setEditableBooks] = useState(null);
+    const [editableAreas, setEditableAreas] = useState(null);
+    const [editableFeatures, setEditableFeatures] = useState(null);
+    const [editableFaces, setEditableFaces] = useState(null);
 
-    // const errorSetters = {
-    //     climb_name: setNameError,
-    //     climb_type: setTypeError,
-    //     grade: setGradeError,
-    //     face_id: setFaceError,
-    //     height: setHeightError,
-    //     decription: setDescriptionError,
-    // }
+    useEffect(() => {
+        fetchFromApi(`/owned/`, setEditableBooks);
+    }, [])
 
     return (
+        editableBooks ?
+        <>
+        { editableBooks.length > 0 ?
         <Container>
             <Form style={{ margin: 'auto'}}>
+                <BookSelector editableBooks={editableBooks} setEditableAreas={setEditableAreas} />
+                
+                <AreaSelector editableAreas={editableAreas} setEditableFeatures={setEditableFeatures} />
+
+                <FeatureSelector editableFeatures={editableFeatures} setEditableFaces={setEditableFaces} />
+
+                <FaceSelector formData={formData} setFormData={setFormData} editableFaces={editableFaces} />
+
                 <Form.Group className="mb-3" controlId="climb_name">
                     <Form.Label>Climb Name</Form.Label>
                     <Form.Control type="text" placeholder="" 
@@ -115,36 +125,39 @@ export default function EditClimb(){
                     onClick={e => {
                         e.preventDefault();
 
+                        const token = getAuth();
+                        let headers = {
+                            'Content-Type': 'application/json'
+                        }
+                        if(token){
+                            headers['Authorization'] = `Token ${token}`;
+                        }
+
                         fetch(`${apiUrlBase}/climbs/`, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
+                            headers: headers,
                             body: JSON.stringify(formData)
                         })
-                        .then(res => res.json())
+                        .then(res => {
+                            if(!res.ok && res.status >= 500){
+                                throw Error(res.statusText);
+                            }
+                            return res.json();
+                        })
                         .then(data => {
                             console.log(data);
-                            let err = false;
-
-                            // check for errors from the api
-                            for(let key of Object.keys(formData)){
-                                if(Object.keys(data).indexOf(key) >= 0){
-                                    if(Object.prototype.toString.call(data[key]) === "[object Array]"){
-                                        err = true;
-                                        // errorSetters[key](data[key][0]);
-                                    }
-                                }
-                                // else if (Object.keys(errorSetters).indexOf(key) >= 0){
-                                //     errorSetters[key]("");
-                                // }
+                            
+                            if(Object.keys(data).indexOf('detail') >= 0){
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: data.detail
+                                });
                             }
-
-                            if(!err){
+                            else {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Climb Created',
-                                    text: `Successfully created ${formData.climb_name}`
+                                    text: `Successfully created climb ${formData.climb_name} (id ${data.climb_id})`
                                 });
                             }
                         })
@@ -157,5 +170,9 @@ export default function EditClimb(){
                 </Button>
             </Form>
         </Container>
+        : <>Nothing available</>}
+        </>
+        : 
+        <></>
     )
 }

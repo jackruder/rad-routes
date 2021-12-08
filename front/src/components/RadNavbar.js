@@ -53,6 +53,7 @@ export default function RadNavbar({ loggedIn, setLoggedIn }) {
                       sessionStorage.removeItem(item);
                     }
                     setLoggedIn(false);
+                    navigate("/");
                     window.location.reload();
                   }}
                 >

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { getAuth, apiUrlBase } from '../../util';
+import { fetchFromApi } from '../../util';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -14,29 +14,18 @@ export default function AreaList({ loggedIn, bookId, onPage }){
     const { id } = useParams();
 
     useEffect(() => {
-        const token = getAuth();
-        const headers = token ? {
-            "Authorization": `Token ${token}`
-        } : null;
-
-        let url;
+        let path;
         if(bookId){
-            url = `${apiUrlBase}/books/${bookId}/areas/`
+            path = `/books/${bookId}/areas/`
         }
         else if(id){
-            url = `${apiUrlBase}/books/${id}/areas/`;
+            path = `/books/${id}/areas/`;
         }
         else{
-            url = `${apiUrlBase}/areas/`;
+            path = `/areas/`;
         }
 
-        fetch(url, {
-            method: 'GET',
-            headers: headers
-        })
-        .then(res => res.json())
-        .then(data => setAreaList(data))
-        .catch(e => console.log(e));
+        fetchFromApi(path, setAreaList);
     }, [id, bookId]);
 
     return (

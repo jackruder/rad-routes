@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { getAuth, apiUrlBase } from '../../util';
+import { fetchFromApi } from '../../util';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -11,17 +11,7 @@ export default function BookList({ loggedIn }){
     const [bookList, setBookList] = useState([]);
 
     useEffect(() => {
-        const token = getAuth();
-        const headers = token ? {
-            "Authorization": `Token ${token}`
-        } : null;
-        fetch(`${apiUrlBase}/books/`, {
-            method: 'GET',
-            headers: headers
-        })
-        .then(res => res.json())
-        .then(data => setBookList(data))
-        .catch(e => console.log(e));
+        fetchFromApi("books/", setBookList);
     }, []);
 
     return (

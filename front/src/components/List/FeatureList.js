@@ -1,34 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import { apiUrlBase, getAuth } from '../../util';
+import { fetchFromApi } from '../../util';
 
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 
 import FeatureCard from '../Card/FeatureCard';
 
-export default function BookList({ loggedIn }){
+export default function BookList({ loggedIn, areaId, onPage }){
     const [featureList, setFeatureList] = useState([]);
 
     const { id } = useParams();
 
     useEffect(() => {
-        const token = getAuth();
-        const headers = token ? {
-            "Authorization": `Token ${token}`
-        } : null;
+        let path;
+        if(areaId){
+            path = `/areas/${areaId}/features`
+        }
+        else if (id){
+            path = `/areas/${id}/features`
+        }
+        else{
+            path = '/features/'
+        }
 
-        const url =  id ? `${apiUrlBase}/areas/${id}/features/` : `${apiUrlBase}/features/`;
-
-        fetch(url, {
-            method: 'GET',
-            headers: headers
-        })
-        .then(res => res.json())
-        .then(data => setFeatureList(data))
-        .catch(e => console.log(e));
-    }, [id]);
+        fetchFromApi(path, setFeatureList);
+    }, [id, areaId]);
 
     return (
         featureList.length > 0 ?
@@ -41,7 +39,7 @@ export default function BookList({ loggedIn }){
                         justifyContent: 'center'
                     }}
                 >
-                    <FeatureCard data={feature}/>
+                    <FeatureCard data={feature} onPage={onPage}/>
                 </Col>
             ))}
         </Row>

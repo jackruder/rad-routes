@@ -5,14 +5,21 @@ import Home from './components/Home';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
 import Search from './components/Search';
+import EditPortal from './components/EditPortal';
+import Layout from './components/Layout';
+
+// lists
 import BookList from './components/List/BookList';
 import AreaList from './components/List/AreaList';
 import FeatureList from './components/List/FeatureList';
 import FaceList from './components/List/FaceList';
 import ClimbList from './components/List/ClimbList';
-import EditPortal from './components/EditPortal';
-import Layout from './components/Layout';
+
+// pages
 import BookPage from './components/Page/BookPage';
+import AreaPage from './components/Page/AreaPage';
+import FeaturePage from './components/Page/FeaturePage';
+import FacePage from './components/Page/FacePage';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState();
@@ -34,6 +41,9 @@ function App() {
           <Route exact path="/climbs" element={<ClimbList loggedIn={loggedIn}/>}/>
 
           <Route exact path="/books/:id" element={<BookPage loggedIn={loggedIn}/>}/>
+          <Route exact path="/areas/:id" element={<AreaPage loggedIn={loggedIn}/>}/>
+          <Route exact path="/features/:id" element={<FeaturePage loggedIn={loggedIn}/>}/>
+          <Route exact path="/faces/:id" element={<FacePage loggedIn={loggedIn}/>}/>
 
           <Route exact path="/books/:id/areas" element={<AreaList loggedIn={loggedIn}/>}/>
           <Route exact path="/areas/:id/features" element={<FeatureList loggedIn={loggedIn}/>}/>

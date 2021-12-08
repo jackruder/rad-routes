@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container'
 import Swal from 'sweetalert2';
+import { getAuth } from '../../util';
 
 const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
@@ -75,11 +76,17 @@ export default function EditBook(){
                     onClick={e => {
                         e.preventDefault();
 
+                        const token = getAuth();
+                        let headers = {
+                            'Content-Type': 'application/json'
+                        }
+                        if(token){
+                            headers['Authorization'] = `Token ${token}`;
+                        }
+
                         fetch(`${apiUrlBase}/books/`, {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
+                            headers: headers,
                             body: JSON.stringify(formData)
                         })
                         .then(res => res.json())
