@@ -1,17 +1,6 @@
 import React from 'react';
 
 import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-
-const buttons = [
-    {
-        text: "Climb of the Day"
-    },
-    {
-        text: "Random Climb"
-    }
-]
 
 export default function Home() {
     return (
@@ -36,17 +25,7 @@ export default function Home() {
                         "Rad Route, Dude"
                     </h1>
                     <br/>
-                    <Row xs={1} md={2} style={{ width: '65%', margin: 'auto' }}>
-                        {buttons.map((btn, idx) => (
-                            <Col 
-                                key={idx}
-                                style={{
-                                    marginTop: 10
-                                }}>
-                                <Button variant="dark">{btn.text}</Button>
-                            </Col>
-                        ))}
-                    </Row>
+                    <Button variant="dark">Random Climb</Button>
                     
                 </div>
                 <div style={{ minWidth: '33vw' }}/>
