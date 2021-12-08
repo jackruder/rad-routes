@@ -12,6 +12,8 @@ export default function Login({ setLoggedIn }){
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
+    const [showPassword, setShowPassword] = useState(false);
+
     const [formDisabled, setFormDisabled] = useState(true);
     const [stayLoggedIn, setStayLoggedIn] = useState(false);
     const [invalidLogin, setInvalidLogin] = useState(false);
@@ -48,13 +50,22 @@ export default function Login({ setLoggedIn }){
                         <Form.Group className="mb-3" controlId="password">
                             <Form.Label>Password</Form.Label>
                             
-                            <Form.Control type="password" placeholder="Enter password"  
+                            <Form.Control type={showPassword ? "text" : "password"} placeholder="Enter password"  
                                 onInput={e => {
                                     setFormDisabled(username === "" || e.target.value === "");
                                     setPassword(e.target.value);
                                 }}
                             />
                         </Form.Group>
+                        
+                        <Button variant="light" size="sm"
+                            onClick={() => {
+                                setShowPassword(!showPassword);
+                            }}
+                        >
+                            {showPassword ? "Hide Password" : "Show Password"}
+                        </Button>
+                        <br/><br/>
 
                         <Form.Check 
                             type={'checkbox'}
@@ -64,7 +75,7 @@ export default function Login({ setLoggedIn }){
                                 setStayLoggedIn(e.target.checked);
                             }}
                         />
-                        <br />
+                        <br/>
 
                         <Button variant="primary" type="submit"
                             disabled={formDisabled}
