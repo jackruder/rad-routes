@@ -28,8 +28,6 @@ export default function SignUp(){
     const [firstNameError, setFirstNameError] = useState("");
     const [lastNameError, setLastNameError] = useState("");
 
-    const [formDisabled, setFormDisabled] = useState(true);
-
     const errorSetters = {
         username: setUsernameError,
         email: setEmailError,
@@ -66,7 +64,6 @@ export default function SignUp(){
                                 let newData = formData;
                                 newData.username = e.target.value;
                                 setFormData(newData);
-                                setFormDisabled(formIsDisabled());
                             }}
                         />
                     </Form.Group>
@@ -117,7 +114,6 @@ export default function SignUp(){
                                 let newData = formData;
                                 newData.email = e.target.value;
                                 setFormData(newData);
-                                setFormDisabled(formIsDisabled());
                             }}
                         />
                         <Form.Text className="text-muted">
@@ -148,7 +144,6 @@ export default function SignUp(){
                                 else{
                                     setPasswordError("Passwords do not match");
                                 }
-                                setFormDisabled(formIsDisabled());
                             }}
                         />
                         <Form.Control
@@ -167,7 +162,6 @@ export default function SignUp(){
                                 else{
                                     setPasswordError("Passwords do not match");
                                 }
-                                setFormDisabled(formIsDisabled());
                             }}
                         />
                         <Button variant="light" size="sm"
