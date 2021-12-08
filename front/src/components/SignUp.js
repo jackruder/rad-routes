@@ -7,20 +7,16 @@ import Swal from 'sweetalert2';
 const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 const defaultFormData = {
-    username: null,
-    first_name: null,
-    last_name: null,
-    email: null,
-    password: null,
+    username: "",
+    first_name: "",
+    last_name: "",
+    email: "",
+    password: "",
     is_guide: false
 }
 
-const redOutline = "red solid 2px";
-
 export default function SignUp(){
     const [formData, setFormData] = useState(defaultFormData);
-    const [passwordOutline, setPasswordOutline] = useState(false);
-    const [passwordConfirmed, setPasswordConfirmed] = useState(false);
     const [password, setPassword] = useState("");
     const [passConfirm, setPassConfirm] = useState("");
 
@@ -32,6 +28,8 @@ export default function SignUp(){
     const [firstNameError, setFirstNameError] = useState("");
     const [lastNameError, setLastNameError] = useState("");
 
+    const [formDisabled, setFormDisabled] = useState(true);
+
     const errorSetters = {
         username: setUsernameError,
         email: setEmailError,
@@ -40,14 +38,23 @@ export default function SignUp(){
         last_name: setLastNameError
     }
 
+    const formIsDisabled = () => {
+        console.log("hello");
+        return password === "" || formData.username === "" || formData.email === "" || passwordError !== "";
+    }
+
     return(
-        <Card style = {{ margin: 'auto', top: '50px', width: '380px' }}>
+        <Card style = {{ margin: 'auto', top: '50px', width: '380px' }}
+            onClick={() => {
+                
+            }}
+        >
             <div style = {{ display: 'flex' }}>
             <Card.Body>
                 <Card.Title>Sign Up</Card.Title>
                 <Form>
                     <Form.Group className="mb-3" controlId="first_name">
-                        <Form.Label>Username</Form.Label>
+                        <Form.Label>Username*</Form.Label>
                         {usernameError !== "" ?
                         <> <br/>
                         <Form.Text style={{color: "#f00"}}>
@@ -59,6 +66,7 @@ export default function SignUp(){
                                 let newData = formData;
                                 newData.username = e.target.value;
                                 setFormData(newData);
+                                setFormDisabled(formIsDisabled());
                             }}
                         />
                     </Form.Group>
@@ -98,7 +106,7 @@ export default function SignUp(){
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="email">
-                        <Form.Label>Email address</Form.Label>
+                        <Form.Label>Email address*</Form.Label>
                         {emailError !== "" ? <><br/>
                         <Form.Text style={{color: "#f00"}}>
                             {emailError}
@@ -109,6 +117,7 @@ export default function SignUp(){
                                 let newData = formData;
                                 newData.email = e.target.value;
                                 setFormData(newData);
+                                setFormDisabled(formIsDisabled());
                             }}
                         />
                         <Form.Text className="text-muted">
@@ -117,7 +126,7 @@ export default function SignUp(){
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="password">
-                        <Form.Label>Password</Form.Label>
+                        <Form.Label>Password*</Form.Label>
                         {passwordError !== "" ? <><br/>
                         <Form.Text style={{color: "#f00"}}>
                             {passwordError}
@@ -126,40 +135,39 @@ export default function SignUp(){
                         <Form.Control
                             type={showPassword ? "text" : "password"}
                             placeholder="Enter password"
-                            style={{ marginBottom: '5px', outline: passwordOutline }}
+                            style={{ marginBottom: '5px' }}
                             onInput={e => {
                                 setPassword(e.target.value);
                                 if(e.target.value === passConfirm){
-                                    setPasswordOutline(null);
-                                    setPasswordConfirmed(true);
+                                    setPasswordError("");
 
                                     let newData = formData;
                                     newData.password = password;
                                     setFormData(newData);
                                 }
                                 else{
-                                    setPasswordOutline(redOutline);
-                                    setPasswordConfirmed(false);
+                                    setPasswordError("Passwords do not match");
                                 }
+                                setFormDisabled(formIsDisabled());
                             }}
                         />
                         <Form.Control
-                            style={{ marginBottom: '5px',  outline: passwordOutline}}
+                            style={{ marginBottom: '5px'}}
                             type={showPassword ? "text" : "password"}
                             placeholder="Confirm password"
                             onInput={e => {
                                 setPassConfirm(e.target.value);
                                 if(e.target.value === password){
-                                    setPasswordOutline(null);
-                                    setPasswordConfirmed(true);
+                                    setPasswordError("");
 
                                     let newData = formData;
                                     newData.password = password;
                                     setFormData(newData);
                                 }
                                 else{
-                                    setPasswordOutline(redOutline);
+                                    setPasswordError("Passwords do not match");
                                 }
+                                setFormDisabled(formIsDisabled());
                             }}
                         />
                         <Button variant="light" size="sm"
@@ -186,11 +194,9 @@ export default function SignUp(){
                     <Button
                         variant="primary"
                         type="submit"
+                        disabled={formIsDisabled()}
                         onClick={e => {
                             e.preventDefault();
-
-                            // guard against password not being filled out
-                            if(!passwordConfirmed) return;
 
                             fetch(`${apiUrlBase}/users/`, {
                                 method: 'POST',
@@ -232,6 +238,10 @@ export default function SignUp(){
                     >
                         Submit
                     </Button>
+                    <br/><br/>
+                    <Form.Text className="text-muted">
+                        * required
+                    </Form.Text>
                 </Form>
             </Card.Body>
             </div>
