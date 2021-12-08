@@ -9,3 +9,25 @@ export const getAuth = () => {
 }
 
 export const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
+
+export const formFieldErrorRed = "#f99";
+
+export const fetchFromApi = (path, setter) => {
+    const _path = path[0] === "/" ? path.substring(1) : path; 
+
+    const token = getAuth();
+    const headers = token ? {
+        "Authorization": `Token ${token}`
+    } : null;
+    
+    fetch(`${apiUrlBase}/${_path}`, {
+        method: 'GET',
+        headers: headers
+    })
+    .then(res => res.json())
+    .then(data => {
+        setter(data)
+        console.log("received data:", data);
+    })
+    .catch(e => console.log(e));
+}

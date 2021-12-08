@@ -8,11 +8,18 @@ import EditFeature from './editPortals/EditFeature.js';
 import EditFace from './editPortals/EditFace.js';
 import EditBook from './editPortals/EditBook.js';
 
+export const selectorStyle = {
+    marginLeft: 20,
+    width: 'clamp(200px, 25%, 400px)',
+}
+
+export const selectorSize = "md";
+
 export default function EditPortal(){
 
-    const [selectedForm, setForm] = useState('Area');
+    const [selectedForm, setForm] = useState('Book');
 
-    const renderForm = React.useCallback(() => {
+    const renderForm = () => {
         switch(selectedForm) {
             case 'Climb': 
                 return <EditClimb />;
@@ -33,7 +40,7 @@ export default function EditPortal(){
                 return null;
           
         }
-    }, [selectedForm]);
+    }
 
     return(
         <Card
@@ -54,11 +61,11 @@ export default function EditPortal(){
                             setForm(e.target.value);
                         }}
                     >
-                        <option value={"Area"}>Area</option>
-                        <option value={"Feature"}>Feature</option>
-                        <option value={"Face"}>Face</option>
-                        <option value={"Climb"}>Climb</option>
-                        <option value={"Book"}>Book</option>
+                        <option value="Book">Book</option>
+                        <option value="Area">Area</option>
+                        <option value="Feature">Feature</option>
+                        <option value="Face">Face</option>
+                        <option value="Climb">Climb</option>
 
                     </Form.Select>
                 </div>
