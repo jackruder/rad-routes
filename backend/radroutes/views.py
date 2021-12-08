@@ -594,6 +594,34 @@ class ListAreaFeaturesById(ListCreateAPIView):
             )
             return Feature.objects.filter(feature_id__in=[x.feature_id for x in b])
 
+class ListFeatureFacesById(ListCreateAPIView):
+    """get features given an area"""
+    """get faces given a feature"""
+
+    permission_classes = [FacePermissions]
+
+    serializer_class = FaceSerializer
+
+    def get_queryset(self):
+        if not self.request.user.is_authenticated:
+            return Face.objects.filter(
+                Q(feature=self.kwargs["feature_id"]),
+                Q(feature__area__book__listed=True),  ##need to decide here
+                Q(feature__area__book__public=True),
+            )
+        else:
+            if self.request.user.is_superuser:
+                return Face.objects.filter(feature=self.kwargs["feature_id"])
+            b = Face.objects.raw(
+                "WITH tmp as ( SELECT * FROM radroutes_feature NATURAL JOIN radroutes_Face WHERE feature_id=%s ), aTable as ( SELECT * FROM radroutes_area INNER JOIN tmp ON tmp.area_id = radroutes_area.area_id ), bTable as ( SELECT * FROM radroutes_book INNER JOIN aTable ON aTable.book_id = radroutes_book.book_id ) SELECT face_id FROM bTable NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION SELECT face_id FROM bTable WHERE author_id=%s OR (public=1 AND listed=1);",
+                [
+                    self.kwargs["feature_id"],
+                    self.request.user.id,
+                    self.request.user.id,
+                ],  ##TODO check escaping here
+            )
+            return Face.objects.filter(face_id__in=[x.face_id for x in b])
+
 
 class ListCreateBookReviewsByBook(ListCreateAPIView):
 

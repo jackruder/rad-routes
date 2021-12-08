@@ -21,6 +21,7 @@ from .views import (
     UserRetrieveUpdateDestroyView,
     ListBookAreasById,
     ListAreaFeaturesById,
+    ListFeatureFacesById,
     ListCreateBookReviewsByBook,
     UserLogout,
     ListUserLibrary,
@@ -51,6 +52,8 @@ urlpatterns = [
     path("books/<int:book_id>/areas/", ListBookAreasById.as_view()),
     # list of features from areas
     path("areas/<int:area_id>/features/", ListAreaFeaturesById.as_view()),
+    # list of faces from features
+    path("features/<int:feature_id>/faces/", ListFeatureFacesById.as_view()),
     # reviewws
     path("books/<int:book_id>/reviews/", ListCreateBookReviewsByBook.as_view()),
     # token authorization
