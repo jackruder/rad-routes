@@ -17,7 +17,7 @@ from .views import (
     ListFaceClimbsById,
     ListFeatureClimbsById,
     ListBookClimbsById,
-    UserListView,
+    UserCreateListView,
     UserRetrieveUpdateDestroyView,
     ListBookAreasById,
     ListAreaFeaturesById,
@@ -30,7 +30,7 @@ from .views import (
 
 urlpatterns = [
     # lists of objects (post to create, get to retrieve list)
-    path("users/", UserListView.as_view()),
+    path("users/", UserCreateListView.as_view()),
     path("climbs/", CreateListAllClimbs.as_view()),
     path("faces/", CreateListAllFaces.as_view()),
     path("features/", CreateListAllFeatures.as_view()),
