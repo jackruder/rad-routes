@@ -140,13 +140,16 @@ class UserSignupSerializer(serializers.ModelSerializer):
 class UserPrivateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username",)
+        fields = (
+            "id",
+            "username",
+        )
 
 
 class UserPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "email", "first_name", "last_name")
+        fields = ("id", "username", "email", "first_name", "last_name")
 
 
 class BookReviewSerializer(serializers.ModelSerializer):

@@ -70,11 +70,10 @@ class UserNameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             return UserSignupSerializer
         else:
             user = get_object_or_404(User, username=self.kwargs["username"])
-            if user.info_private == True:
-                return UserPrivateSerializer
-            else:
+            if user.info_private == False or self.request.user.is_superuser:
                 return UserPublicSerializer
-
+            else:
+                return UserPrivateSerializer
 
 class UserIdRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     permission_classes = [UserDetailPermissions]
@@ -86,10 +85,10 @@ class UserIdRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             return UserSignupSerializer
         else:
             user = get_object_or_404(User, id=self.kwargs["id"])
-            if user.info_private == True or self.request.user.is_superuser:
-                return UserPrivateSerializer
-            else:
+            if user.info_private == False or self.request.user.is_superuser:
                 return UserPublicSerializer
+            else:
+                return UserPrivateSerializer
 
 
 class UserLogout(APIView):
