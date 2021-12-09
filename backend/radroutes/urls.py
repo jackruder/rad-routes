@@ -39,7 +39,7 @@ urlpatterns = [
     path("books/", CreateListAllBooks.as_view()),
     # individual objects (put to update, get for individual object)
     path("users/<int:pk>/", UserIdRetrieveUpdateDestroyView().as_view()),
-    path("users/<string:username>/", UserNameRetrieveUpdateDestroyView().as_view()),
+    path("users/<str:username>/", UserNameRetrieveUpdateDestroyView().as_view()),
     path("climbs/<int:pk>/", RetrieveUpdateDestroyAllClimb.as_view()),
     path("faces/<int:pk>/", RetrieveUpdateDestroyAllFace.as_view()),
     path("features/<int:pk>/", RetrieveUpdateDestroyAllFeature.as_view()),
