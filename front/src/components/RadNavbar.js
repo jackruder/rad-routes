@@ -30,7 +30,6 @@ export default function RadNavbar({ loggedIn, setLoggedIn }) {
             <Nav.Link onClick={() => navigate("/features")}>Features</Nav.Link>
             <Nav.Link onClick={() => navigate("/faces")}>Faces</Nav.Link>
             <Nav.Link onClick={() => navigate("/climbs")}>Climbs</Nav.Link>
-            <Nav.Link onClick={() => navigate("/search")}>Search</Nav.Link>
             {
               loggedIn ?
               <Nav.Link onClick={() => navigate("/create")}>Create</Nav.Link>

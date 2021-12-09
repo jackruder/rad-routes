@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
-import Table from './SearchTable.js';
-// import Table from 'react-bootstrap/Table';
+// import Table from './SearchTable.js';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
-import { apiUrlBase, fetchFromApi, getAuth } from '../util.js';
+import { fetchFromApi } from '../util.js';
 
 export default function Search() {
     const [climbs, setClimbs] = useState([]);
@@ -65,7 +64,6 @@ export default function Search() {
             </Card>
             <br />
 
-        {/* <Table data={climbs}/> */}
 
         <p>{JSON.stringify(climbs)}</p>
 

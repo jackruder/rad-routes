@@ -4,9 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import SignUp from './components/SignUp';
 import Login from './components/Login';
-import Search from './components/Search';
 import EditPortal from './components/EditPortal';
 import Layout from './components/Layout';
+import NotFound from './components/NotFound';
 
 // lists
 import BookList from './components/List/BookList';
@@ -52,8 +52,9 @@ function App() {
 
           <Route exact path="/signup" element={<SignUp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>
           <Route exact path="/login" element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>
-          <Route exact path="/search" element={<Search/>}/>
           <Route exact path="/create" element={<EditPortal/>}/>
+
+          <Route exact path="*" element={<NotFound/>}/>
         </Routes>
       </Layout>
     </BrowserRouter>
