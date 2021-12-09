@@ -37,7 +37,7 @@ export default function Book({ data }) {
           <Card.Title>{bookObj.book_name}</Card.Title>
           <Card.Text style={{ marginTop: '1rem' }}>{bookObj.book_description}</Card.Text>
           Best Quality: <b>{bookObj.quality_max}</b> <br/>
-          <Card.Text>by {authorObj.first_name} {authorObj.username}</Card.Text>
+          <Card.Text>by {authorObj.username}</Card.Text>
         </Card.Body>
     </Card> : <>This Climb Does Not Exist</>
   )

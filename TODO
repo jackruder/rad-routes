@@ -3,5 +3,4 @@
     and we will probably get rid of the link to a card's children
 - UI: make author page, where all their guidebooks are listed
 - UI: handle private listed cards more elegantly
-- API: public user list should not include emails
 - TESTING: flesh out apitest.py

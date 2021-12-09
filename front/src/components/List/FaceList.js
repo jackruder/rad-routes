@@ -29,7 +29,7 @@ export default function BookList({ loggedIn, featureId, onPage }){
 
     return (
         faceList.length > 0 ?
-        <Row xs={1} md={2} style={{ width: '100%' }}>
+        <Row xs={1} md={2} lg={3} style={{ width: '100%' }}>
             {faceList.map((face, idx) => (
                 <Col
                     key={idx}

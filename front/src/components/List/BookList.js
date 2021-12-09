@@ -16,7 +16,7 @@ export default function BookList({ loggedIn }){
 
     return (
         bookList.length > 0 ?
-        <Row xs={1} md={2} style={{ width: '100%' }}>
+        <Row xs={1} md={2} lg={3} style={{ width: '100%' }}>
             {bookList.map((book, idx) => (
                 <Col
                     key={idx}

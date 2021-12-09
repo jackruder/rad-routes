@@ -30,7 +30,7 @@ export default function BookList({ loggedIn, areaId, onPage }){
 
     return (
         featureList.length > 0 ?
-        <Row xs={1} md={2} style={{ width: '100%' }}>
+        <Row xs={1} md={2} lg={3} style={{ width: '100%' }}>
             {featureList.map((feature, idx) => (
                 <Col
                     key={idx}

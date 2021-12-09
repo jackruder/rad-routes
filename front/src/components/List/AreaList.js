@@ -30,7 +30,7 @@ export default function AreaList({ loggedIn, bookId, onPage }){
 
     return (
         areaList.length > 0 ?
-        <Row xs={1} md={2} style={{ width: '100%' }}>
+        <Row xs={1} md={2} lg={3} style={{ width: '100%' }}>
             {areaList.map((area, idx) => (
                 <Col
                     key={idx}

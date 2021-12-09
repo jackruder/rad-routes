@@ -30,7 +30,7 @@ export default function ClimbList({ loggedIn, faceId, onPage }){
 
     return (
         climbList.length > 0 ?
-        <Row xs={1} md={2} style={{ width: '100%' }}>
+        <Row xs={1} md={2} lg={3} style={{ width: '100%' }}>
             {climbList.map((climb, idx) => (
                 <Col
                     key={idx}
