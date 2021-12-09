@@ -14,7 +14,7 @@ const defaultFormData = {
     email: "",
     password: "",
     is_guide: false,
-    info_private: true
+    info_private: false
 }
 
 export default function SignUp({ setLoggedIn }){
@@ -192,7 +192,7 @@ export default function SignUp({ setLoggedIn }){
                         }}
                     />
 
-                    <Form.Check 
+                    <Form.Check
                         type={'checkbox'}
                         id={`info_private`}
                         label={`Keep my info private`}
