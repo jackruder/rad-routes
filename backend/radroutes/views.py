@@ -1,5 +1,5 @@
 from contextlib import nullcontext
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.db.models import Q, Model
 from guardian.shortcuts import assign_perm
 from rest_framework import mixins, status
@@ -20,7 +20,9 @@ from .serializers import (
     AreaSerializer,
     BookSerializer,
     BookPostSerializer,
-    UserSerializer,
+    UserSignupSerializer,
+    UserPublicSerializer,
+    UserPrivateSerializer,
 )
 from .models import (
     Climb,
@@ -40,13 +42,14 @@ from .permissions import (
     AreaPermissions,
     BookPermissions,
     UserCreateListPermissions,
+    UserDetailPermissions,
 )
 
 # Create your views here.
 
 
 class UserCreateListView(ListCreateAPIView):
-    serializer_class = UserSerializer
+    serializer_class = UserSignupSerializer
     permission_classes = [UserCreateListPermissions]
 
     def get_queryset(self):
@@ -58,9 +61,19 @@ class UserCreateListView(ListCreateAPIView):
 
 
 class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
-    lookup_field = "pk"
+    permission_classes = [UserDetailPermissions]
+    lookup_field = "username"
     queryset = User.objects.all()
-    serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        if self.request.user == self.kwargs["username"]:
+            return UserSignupSerializer
+        else:
+            user = get_object_or_404(User, username=self.kwargs["username"])
+            if user.info_private == True:
+                return UserPrivateSerializer
+            else:
+                return UserPublicSerializer
 
 
 class UserLogout(APIView):

@@ -78,7 +78,7 @@ class BookPostSerializer(serializers.ModelSerializer):
         )
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSignupSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True,
         validators=[
@@ -134,6 +134,16 @@ class UserSerializer(serializers.ModelSerializer):
             "is_guide",
             "info_private",
         )
+
+
+class UserPrivateSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = "username"
+
+
+class UserPublicSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ("username", "email", "first_name", "last_name")
 
 
 class BookReviewSerializer(serializers.ModelSerializer):
