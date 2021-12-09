@@ -75,6 +75,7 @@ class UserNameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
             else:
                 return UserPrivateSerializer
 
+
 class UserIdRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     permission_classes = [UserDetailPermissions]
     lookup_field = "id"
@@ -447,7 +448,7 @@ class RetrieveUpdateDestroyAllBook(RetrieveUpdateDestroyAPIView):
                 return Book.objects.filter(public=True)
             else:
                 b = Book.objects.raw(
-                    "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select book_id FROM radroutes_book WHERE author_id=%s OR public=1;",
+                    "SELECT book_id FROM radroutes_book NATURAL JOIN radroutes_UserLibrary NATURAL JOIN radroutes_User NATURAL JOIN radroutes_Book WHERE user_id=%s UNION Select book_id FROM radroutes_book WHERE author_id=%s OR public=1 OR listed = 1;",
                     [self.request.user.id, self.request.user.id],
                 )
                 return Book.objects.filter(book_id__in=[x.book_id for x in b])
