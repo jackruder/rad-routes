@@ -75,17 +75,20 @@ class CreateListAllClimbs(ListCreateAPIView):
 
     def create(self, serializer):
         try:
-            face_author = Face.objects.get(face_id=self.request.data.get("face")).feature.area.book.author
+            face_author = Face.objects.get(
+                face_id=self.request.data.get("face")
+            ).feature.area.book.author
         except:
-            return Response("Must provide face id as field \"face\"", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                'Must provide face id as field "face"',
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         if face_author == self.request.user:
             serializer = ClimbSerializer(data=self.request.data)
-            if serializer.is_valid():
+            if serializer.is_valid(raise_exception=True):
                 self.perform_create(serializer)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
                 "invalid credentials provided",
@@ -143,17 +146,20 @@ class CreateListAllFaces(ListCreateAPIView):
 
     def create(self, serializer):
         try:
-            feature_author = Feature.objects.get(feature_id=self.request.data.get("feature")).area.book.author
+            feature_author = Feature.objects.get(
+                feature_id=self.request.data.get("feature")
+            ).area.book.author
         except:
-            return Response("Must provide feature id as field \"feature\"", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                'Must provide feature id as field "feature"',
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         if feature_author == self.request.user:
             serializer = FaceSerializer(data=self.request.data)
-            if serializer.is_valid():
+            if serializer.is_valid(raise_exception=True):
                 self.perform_create(serializer)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
                 "invalid credentials provided",
@@ -212,17 +218,20 @@ class CreateListAllFeatures(ListCreateAPIView):
 
     def create(self, serializer):
         try:
-            area_author = Area.objects.get(area_id=self.request.data.get("area")).book.author
+            area_author = Area.objects.get(
+                area_id=self.request.data.get("area")
+            ).book.author
         except:
-            return Response("Must provide area id as field \"area\"", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                'Must provide area id as field "area"',
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         if area_author == self.request.user:
             serializer = FeatureSerializer(data=self.request.data)
-            if serializer.is_valid():
+            if serializer.is_valid(raise_exception=True):
                 self.perform_create(serializer)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
                 "invalid credentials provided",
@@ -283,15 +292,16 @@ class CreateListAllAreas(ListCreateAPIView):
         try:
             book_author = Book.objects.get(book_id=self.request.data.get("book")).author
         except:
-            return Response("Must provide book id as field \"book\"", status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                'Must provide book id as field "book"',
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
         if book_author == self.request.user:
             serializer = AreaSerializer(data=self.request.data)
-            if serializer.is_valid():
+            if serializer.is_valid(raise_exception=True):
                 self.perform_create(serializer)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                return Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(
                 "invalid credentials provided {}".format(self.request.data.get("book")),
@@ -594,8 +604,10 @@ class ListAreaFeaturesById(ListCreateAPIView):
             )
             return Feature.objects.filter(feature_id__in=[x.feature_id for x in b])
 
+
 class ListFeatureFacesById(ListCreateAPIView):
     """get features given an area"""
+
     """get faces given a feature"""
 
     permission_classes = [FacePermissions]
