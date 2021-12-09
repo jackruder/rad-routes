@@ -60,16 +60,32 @@ class UserCreateListView(ListCreateAPIView):
                 return self.request.user
 
 
-class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class UserNameRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
     permission_classes = [UserDetailPermissions]
     lookup_field = "username"
     queryset = User.objects.all()
 
     def get_serializer_class(self):
-        if self.request.user == self.kwargs["username"]:
+        if self.request.user.username == self.kwargs["username"]:
             return UserSignupSerializer
         else:
             user = get_object_or_404(User, username=self.kwargs["username"])
+            if user.info_private == True:
+                return UserPrivateSerializer
+            else:
+                return UserPublicSerializer
+
+
+class UserIdRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [UserDetailPermissions]
+    lookup_field = "id"
+    queryset = User.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.user.id == self.kwargs["id"]:
+            return UserSignupSerializer
+        else:
+            user = get_object_or_404(User, id=self.kwargs["id"])
             if user.info_private == True:
                 return UserPrivateSerializer
             else:
