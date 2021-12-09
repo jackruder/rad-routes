@@ -4,3 +4,5 @@
 - UI: make author page, where all their guidebooks are listed
 - UI: handle private listed cards more elegantly
 - TESTING: flesh out apitest.py
+
+- DEPLOYMENT: get django to map its non-api 404 to the react 404
