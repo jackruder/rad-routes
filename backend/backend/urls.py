@@ -25,6 +25,25 @@ urlpatterns = [
     path("", TemplateView.as_view(template_name="index.html")),
     path("login", TemplateView.as_view(template_name="index.html")),
     path("signup", TemplateView.as_view(template_name="index.html")),
+    path("search", TemplateView.as_view(template_name="index.html")),
+    path("create", TemplateView.as_view(template_name="index.html")),
+
+    path("climbs", TemplateView.as_view(template_name="index.html")),
+    path("faces", TemplateView.as_view(template_name="index.html")),
+    path("features", TemplateView.as_view(template_name="index.html")),
+    path("areas", TemplateView.as_view(template_name="index.html")),
+    path("books", TemplateView.as_view(template_name="index.html")),
+
+    path("faces/<int:id>", TemplateView.as_view(template_name="index.html")),
+    path("features/<int:id>", TemplateView.as_view(template_name="index.html")),
+    path("areas/<int:id>", TemplateView.as_view(template_name="index.html")),
+    path("books/<int:id>", TemplateView.as_view(template_name="index.html")),
+
+    path("faces/<int:id>/climbs", TemplateView.as_view(template_name="index.html")),
+    path("features/<int:id>/faces", TemplateView.as_view(template_name="index.html")),
+    path("areas/<int:id>/features", TemplateView.as_view(template_name="index.html")),
+    path("books/<int:id>/areas", TemplateView.as_view(template_name="index.html")),
+
     path("manifest.json", TemplateView.as_view(template_name="manifest.json")),
     path("api/", include('radroutes.urls'))
 ]
