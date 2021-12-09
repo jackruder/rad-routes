@@ -139,7 +139,7 @@ class UserSignupSerializer(serializers.ModelSerializer):
 class UserPrivateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "username"
+        fields = ("username",)
 
 
 class UserPublicSerializer(serializers.ModelSerializer):
