@@ -7,9 +7,7 @@ import Swal from 'sweetalert2';
 import BookSelector from './selectors/BookSelector';
 import AreaSelector from './selectors/AreaSelector';
 import FeatureSelector from './selectors/FeatureSelector';
-import { getAuth, fetchFromApi } from '../../util';
-
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
+import { getAuth, fetchFromApi, apiUrlBase } from '../../util';
 
 const defaultFormData = {
     face_name: null,

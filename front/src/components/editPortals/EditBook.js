@@ -3,9 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container'
 import Swal from 'sweetalert2';
-import { getAuth } from '../../util';
-
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
+import { getAuth, apiUrlBase } from '../../util';
 
 const defaultFormData = {
     book_name: null,

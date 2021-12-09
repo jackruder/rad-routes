@@ -6,7 +6,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
+import { apiUrlBase } from '../util';
 
 export default function Login({ setLoggedIn }){
     const [username, setUsername] = useState("");

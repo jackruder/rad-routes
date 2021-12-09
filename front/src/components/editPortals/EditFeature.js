@@ -4,12 +4,10 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container'
 import Swal from 'sweetalert2';
 
-import { fetchFromApi, getAuth } from '../../util';
+import { fetchFromApi, getAuth, apiUrlBase } from '../../util';
 
 import BookSelector from './selectors/BookSelector';
 import AreaSelector from './selectors/AreaSelector';
-
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
 
 const defaultFormData = {
     feature_name: null,

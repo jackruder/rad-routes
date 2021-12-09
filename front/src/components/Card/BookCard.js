@@ -23,17 +23,21 @@ export default function Book({ data }) {
   return (
     !bookObj || Object.keys(bookObj).length > 1 ?
     <Card
-      style={{ width: '36rem', margin: 10 }}
+      style={{ 
+        width: '36rem',
+        margin: 10,
+        cursor: 'pointer'
+      }}
       onClick={() => {
         console.log(bookObj);
+        navigate(`/books/${bookObj.book_id}`);
       }}
     >
         <Card.Body style={{ minWidth: '60%', lineHeight: '2rem'}}>
           <Card.Title>{bookObj.book_name}</Card.Title>
           <Card.Text style={{ marginTop: '1rem' }}>{bookObj.book_description}</Card.Text>
           Best Quality: <b>{bookObj.quality_max}</b> <br/>
-          <Card.Text>by {authorObj.first_name} {authorObj.last_name}</Card.Text>
-          <Card.Link onClick={() => navigate(`/books/${bookObj.book_id}`)}>Areas</Card.Link><br/>
+          <Card.Text>by {authorObj.first_name} {authorObj.username}</Card.Text>
         </Card.Body>
     </Card> : <>This Climb Does Not Exist</>
   )

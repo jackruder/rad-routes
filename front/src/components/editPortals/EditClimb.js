@@ -9,9 +9,7 @@ import AreaSelector from './selectors/AreaSelector';
 import FeatureSelector from './selectors/FeatureSelector';
 import FaceSelector from './selectors/FaceSelector';
 
-import { fetchFromApi, getAuth } from '../../util';
-
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
+import { fetchFromApi, getAuth, apiUrlBase } from '../../util';
 
 const defaultFormData = {
     climb_name: null,

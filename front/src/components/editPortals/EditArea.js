@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 
 import BookSelector from './selectors/BookSelector';
 
-const apiUrlBase = process.env.NODE_ENV === 'production' ? 'http://radroutes.guide/api' : 'http://localhost:8000/api';
+import { apiUrlBase } from '../../util';
 
 const defaultFormData = {
     book: null,
