@@ -6,24 +6,13 @@ import Table from './SearchTable.js';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Container from 'react-bootstrap/Container';
-import { apiUrlBase, getAuth } from '../util.js';
+import { apiUrlBase, fetchFromApi, getAuth } from '../util.js';
 
 export default function Search() {
     const [climbs, setClimbs] = useState([]);
 
     useEffect(() => {
-        const token = getAuth();
-        const headers = token ? {
-            "Authorization": `Token ${token}`
-        } : null;
-
-        fetch(`${apiUrlBase}/climbs`, {
-            method: 'GET',
-            headers: headers
-        })
-        .then(res => res.json())
-        .then(data => setClimbs(data))
-        .catch(e => console.log(e));
+        fetchFromApi("/climbs", setClimbs);
     }, []);
 
     return(

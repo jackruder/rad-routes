@@ -36,7 +36,7 @@ export default function BookPage({ loggedIn }){
         const token = getAuth();
         const headers = token ? {
             "Authorization": `Token ${token}`
-        } : null;
+        } : {};
 
         fetch(`${apiUrlBase}/books/${id}`, {
             method: 'GET',
