@@ -84,14 +84,14 @@ export default function EditClimb(){
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="height">
-                    <Form.Label>Height (m)</Form.Label>
+                    <Form.Label>Height {navigator.language.toLowerCase() === 'en-us' ? '(ft)' : '(m)'}</Form.Label>
                     <Form.Control type="text" placeholder="" 
                         onInput={e => {
                             if((Number.isInteger(parseInt(e.target.value))) || (e.target.value === "")){
                                 let newData = formData;
-                                newData.height = parseInt(e.target.value);
+                                let meters = parseInt(e.target.value);
+                                newData.height = navigator.language.toLowerCase() === 'en-us' ? Math.round(meters / 3.28084) : meters;
                                 setFormData(newData);
-
                             }
                             else{
                                 Swal.fire({
