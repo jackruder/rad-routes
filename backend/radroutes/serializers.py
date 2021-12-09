@@ -107,6 +107,7 @@ class UserSerializer(serializers.ModelSerializer):
             is_guide=validated_data["is_guide"],
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
+            info_private=validated_data["info_private"],
         )
         return user
 
@@ -118,6 +119,7 @@ class UserSerializer(serializers.ModelSerializer):
             is_guide=validated_data["is_guide"],
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
+            info_private=validated_data["info_private"],
         )
         return user
 
