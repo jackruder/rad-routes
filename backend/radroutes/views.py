@@ -39,6 +39,7 @@ from .permissions import (
     FeaturePermissions,
     AreaPermissions,
     BookPermissions,
+    UserCreateListPermissions,
 )
 
 # Create your views here.
@@ -46,6 +47,7 @@ from .permissions import (
 
 class UserCreateListView(ListCreateAPIView):
     serializer_class = UserSerializer
+    permission_classes = [UserCreateListPermissions]
 
     def get_queryset(self):
         if self.request.user.is_superuser:
