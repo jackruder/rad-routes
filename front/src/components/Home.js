@@ -26,12 +26,16 @@ export default function Home({ loggedIn }) {
                 }}>
                     <h1 style={{
                         fontSize: 72,
-                        animation: '1s ease-out 0s 1 slideInLeft'
+                        animation: '1s ease-out 0s 1 fadeIn'
                     }}>
                         "Rad Route, Dude"
                     </h1>
                     <br/>
-                    <Button variant="dark"
+                    <Button
+                        variant="dark"
+                        style={{
+                            animation: '1s ease-out 0s 1 fadeIn'
+                        }}
                         onClick={() => {
                             fetchFromApi("/climbs", setClimbs);
                         }}
