@@ -3,6 +3,8 @@ from .models import UserLibrary, Book
 
 
 def grantBookReqUser(book, request):
+    if request.user.is_superuser:
+            return True
     if request.method in permissions.SAFE_METHODS:
         return True
     else:
@@ -12,7 +14,7 @@ def grantBookReqUser(book, request):
             return False
 
 
-class ClimbPermissions(permissions.BasePermission):
+class GuideBookPermissions(permissions.BasePermission):
     def has_permission(self, request, view):  # PREVENT WRITE BY UNAUTH
         if request.method not in permissions.SAFE_METHODS:
             if request.user.is_authenticated:
@@ -22,80 +24,43 @@ class ClimbPermissions(permissions.BasePermission):
         else:
             return True
 
+
+class ClimbPermissions(GuideBookPermissions):
     def has_object_permission(self, request, view, obj):
-        if request.user.is_superuser:
-            return True
         book = Book.objects.get(book_id=obj.face.feature.area.book.book_id)
 
         return grantBookReqUser(book, request)
 
 
-class FacePermissions(permissions.BasePermission):
-    def has_permission(self, request, view):  # PREVENT WRITE BY UNAUTH
-        if request.method not in permissions.SAFE_METHODS:
-            if request.user.is_authenticated:
-                return True
-            else:
-                return False
-        else:
-            return True
-
+class FacePermissions(GuideBookPermissions):
     def has_object_permission(self, request, view, obj):
-        if request.user.is_superuser:
-            return True
-
         book = Book.objects.get(book_id=obj.feature.area.book.book_id)
         return grantBookReqUser(book, request)
 
 
-class FeaturePermissions(permissions.BasePermission):
-    def has_permission(self, request, view):  # PREVENT WRITE BY UNAUTH
-        if request.method not in permissions.SAFE_METHODS:
-            if request.user.is_authenticated:
-                return True
-            else:
-                return False
-        else:
-            return True
-
+class FeaturePermissions(GuideBookPermissions):
     def has_object_permission(self, request, view, obj):
-        if request.user.is_superuser:
-            return True
-
         book = Book.objects.get(book_id=obj.area.book.book_id)
         return grantBookReqUser(book, request)
 
 
-class AreaPermissions(permissions.BasePermission):
-    def has_permission(self, request, view):  # PREVENT WRITE BY UNAUTH
-        if request.method not in permissions.SAFE_METHODS:
-            if request.user.is_authenticated:
-                return True
-            else:
-                return False
-        else:
-            return True
-
+class AreaPermissions(GuideBookPermissions):
     def has_object_permission(self, request, view, obj):
-        if request.user.is_superuser:
-            return True
-
         book = Book.objects.get(book_id=obj.book.book_id)
         return grantBookReqUser(book, request)
 
 
-class BookPermissions(permissions.BasePermission):
-    def has_permission(self, request, view):  # PREVENT WRITE BY UNAUTH
-        if request.method not in permissions.SAFE_METHODS:
-            if request.user.is_authenticated:
+class BookPermissions(GuideBookPermissions):
+    def has_object_permission(self, request, view, obj):
+        return grantBookReqUser(obj, request)
+
+
+class OnlySuperUserGetPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method == "GET":
+            if request.user.is_superuser:
                 return True
             else:
                 return False
         else:
             return True
-
-    def has_object_permission(self, request, view, obj):
-        if request.user.is_superuser:
-            return True
-
-        return grantBookReqUser(obj, request)

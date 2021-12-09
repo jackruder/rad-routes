@@ -44,9 +44,15 @@ from .permissions import (
 # Create your views here.
 
 
-class UserListView(ListCreateAPIView):
-    queryset = User.objects.all()
+class UserCreateListView(ListCreateAPIView):
     serializer_class = UserSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return User.objects.all()
+        else:
+            if self.request.user.is_authenticated:
+                return self.request.user
 
 
 class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
