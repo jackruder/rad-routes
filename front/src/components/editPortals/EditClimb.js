@@ -93,7 +93,7 @@ export default function EditClimb(){
                 </Form.Group> */}
 
                 <Form.Group className="mb-3" controlId="height">
-                    <Form.Label>Height (ft)</Form.Label>
+                    <Form.Label>Height (m)</Form.Label>
                     <Form.Control type="text" placeholder="" 
                         onInput={e => {
 
