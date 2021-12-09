@@ -50,7 +50,7 @@ function App() {
           <Route exact path="/features/:id/faces" element={<FaceList loggedIn={loggedIn}/>}/>
           <Route exact path="/faces/:id/climbs" element={<ClimbList loggedIn={loggedIn}/>}/>
 
-          <Route exact path="/signup" element={<SignUp/>}/>
+          <Route exact path="/signup" element={<SignUp loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>
           <Route exact path="/login" element={<Login loggedIn={loggedIn} setLoggedIn={setLoggedIn}/>}/>
           <Route exact path="/search" element={<Search/>}/>
           <Route exact path="/create" element={<EditPortal/>}/>

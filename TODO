@@ -1,7 +1,6 @@
 - UI: clicking on a card should bring you to the page for that card
     this means we must call e.stopPropogate or whatever its called when users click on the links within a card
     and we will probably get rid of the link to a card's children
-- UI: redirect and log in upon successful sign up
 - UI: make author page, where all their guidebooks are listed
 - UI: handle private listed cards more elegantly
 - API: public user list should not include emails

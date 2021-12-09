@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
@@ -12,11 +13,13 @@ const defaultFormData = {
     last_name: "",
     email: "",
     password: "",
-    is_guide: false
+    is_guide: false,
+    info_private: true
 }
 
-export default function SignUp(){
+export default function SignUp({ setLoggedIn }){
     const [formData, setFormData] = useState(defaultFormData);
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passConfirm, setPassConfirm] = useState("");
 
@@ -27,6 +30,8 @@ export default function SignUp(){
     const [passwordError, setPasswordError] = useState("");
     const [firstNameError, setFirstNameError] = useState("");
     const [lastNameError, setLastNameError] = useState("");
+
+    const navigate = useNavigate();
 
     const errorSetters = {
         username: setUsernameError,
@@ -61,6 +66,8 @@ export default function SignUp(){
                         : <></>}
                         <Form.Control type="text" placeholder="johnsmith42"
                             onInput={e => {
+                                setUsername(e.target.value);
+
                                 let newData = formData;
                                 newData.username = e.target.value;
                                 setFormData(newData);
@@ -78,6 +85,7 @@ export default function SignUp(){
                         : <></>}
                         <Form.Control type="text" placeholder="John"
                             onInput={e => {
+
                                 let newData = formData;
                                 newData.first_name = e.target.value;
                                 setFormData(newData);
@@ -183,6 +191,17 @@ export default function SignUp(){
                             setFormData(newData);
                         }}
                     />
+
+                    <Form.Check 
+                        type={'checkbox'}
+                        id={`info_private`}
+                        label={`Keep my info private`}
+                        onInput={e => {
+                            let newData = formData;
+                            newData.info_private = e.target.checked;
+                            setFormData(newData);
+                        }}
+                    />
                     <br />
 
                     <Button
@@ -218,11 +237,43 @@ export default function SignUp(){
                                     for(let key of Object.keys(errorSetters)){
                                         errorSetters[key](false);
                                     }
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Account Created',
-                                        text: `Welcome to Rad Routes, ${formData.first_name} 🧗`
-                                    });
+
+                                    //BEGIN LOGIN
+                                    console.log("fetching authorization");
+                                    fetch(`${apiUrlBase}/authorization/`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify({ username, password })
+                                    })
+                                    .then(res => res.json())
+                                    .then(data => {
+
+                                        try{
+                                            sessionStorage.setItem("auth_token", data.token);
+                                            localStorage.removeItem("auth_token");
+                                            localStorage.setItem("username", username);
+
+                                            setLoggedIn(true);
+
+                                            Swal.fire({
+                                                icon: 'success',
+                                                title: 'Account Created',
+                                                text: `Welcome to Rad Routes, ${formData.first_name} 🧗`
+                                            }).then(navigate("/books"));
+
+                                        }
+                                        catch(e){
+                                            console.log(e);
+                                            alert("Unknown error");
+                                        }
+                                        
+                                    })
+                                    .catch(err => console.log(err));
+
+                                    //END LOGIN
+
                                 }
                             })
                             .catch(e => {
