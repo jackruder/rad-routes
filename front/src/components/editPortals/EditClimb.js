@@ -93,12 +93,25 @@ export default function EditClimb(){
                 </Form.Group> */}
 
                 <Form.Group className="mb-3" controlId="height">
-                    <Form.Label>Height (m)</Form.Label>
+                    <Form.Label>Height (ft)</Form.Label>
                     <Form.Control type="text" placeholder="" 
                         onInput={e => {
-                            let newData = formData;
-                            newData.height = e.target.value;
-                            setFormData(newData);
+
+                            if((Number.isInteger(parseInt(e.target.value))) || (e.target.value == "")){
+
+                                let newData = formData;
+                                newData.height = parseInt(e.target.value);
+                                setFormData(newData);
+
+                            }
+                            else{
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Height must be a number',
+                                    text: `Please Try Again.`
+                                });
+                                e.target.value = "";
+                            }
                         }}
                     />
                 </Form.Group>
