@@ -32,7 +32,7 @@ function App() {
     <BrowserRouter>
       <Layout loggedIn={loggedIn} setLoggedIn={setLoggedIn}>
         <Routes>
-          <Route exact path="/" element={<Home/>}/>
+          <Route exact path="/" element={<Home loggedIn={loggedIn}/>}/>
 
           <Route exact path="/books" element={<BookList loggedIn={loggedIn}/>}/>
           <Route exact path="/areas" element={<AreaList loggedIn={loggedIn}/>}/>

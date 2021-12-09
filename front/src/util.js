@@ -18,7 +18,7 @@ export const fetchFromApi = (path, setter) => {
     const token = getAuth();
     const headers = token ? {
         "Authorization": `Token ${token}`
-    } : null;
+    } : {};
     
     fetch(`${apiUrlBase}/${_path}`, {
         method: 'GET',

@@ -4,6 +4,5 @@
 - UI: redirect and log in upon successful sign up
 - UI: make author page, where all their guidebooks are listed
 - UI: handle private listed cards more elegantly
-- UI: actually implement random climb
 - API: public user list should not include emails
 - TESTING: flesh out apitest.py
