@@ -24,6 +24,8 @@ export default function EditFace(){
     const [editableAreas, setEditableAreas] = useState(null);
     const [editableFeatures, setEditableFeatures] = useState(null);
 
+    const [formDisabled, setFormDisabled] = useState(true);
+
     useEffect(() => {
         fetchFromApi(`/owned/`, setEditableBooks);
     }, [])
@@ -38,7 +40,7 @@ export default function EditFace(){
                 
                 <AreaSelector editableAreas={editableAreas} setEditableFeatures={setEditableFeatures} />
 
-                <FeatureSelector formData={formData} setFormData={setFormData} editableFeatures={editableFeatures} />
+                <FeatureSelector onChange={() => setFormDisabled(false)} formData={formData} setFormData={setFormData} editableFeatures={editableFeatures} />
 
                 <Form.Group className="mb-3" controlId="face_name">
                     <Form.Label>Face Name</Form.Label>
@@ -70,6 +72,7 @@ export default function EditFace(){
                 <Button 
                     variant="primary" 
                     type="submit"
+                    disabled={formDisabled}
                     onClick={e => {
                         e.preventDefault();
 

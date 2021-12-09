@@ -5,10 +5,10 @@ import { selectorSize, selectorStyle } from "../../EditPortal";
 
 import Form from 'react-bootstrap/Form';
 
-export default function BookSelector({ formData, setFormData, editableBooks, setEditableAreas }){
+export default function BookSelector({ onChange, formData, setFormData, editableBooks, setEditableAreas }){
     return (
         <Form.Group className="mb-3">
-            <Form.Label>Book</Form.Label>
+            <Form.Label>Book*</Form.Label>
             <Form.Select
                 style={selectorStyle}
                 size={selectorSize}
@@ -21,6 +21,10 @@ export default function BookSelector({ formData, setFormData, editableBooks, set
 
                     if(setEditableAreas){
                         fetchFromApi(`/books/${e.target.value}/areas`, setEditableAreas);
+                    }
+
+                    if (typeof onChange === 'function'){
+                        onChange();
                     }
                 }}
                 defaultValue={"default"}

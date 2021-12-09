@@ -18,9 +18,6 @@ const defaultFormData = {
 export default function EditBook(){
     const [formData, setFormData] = useState(defaultFormData);
 
-    // const errorSetters = {
-    // }
-
     return (
         <Container>
             <Form style={{ margin: 'auto'}}>

@@ -25,6 +25,8 @@ export default function EditFeature(){
     const [editableBooks, setEditableBooks] = useState(null);
     const [editableAreas, setEditableAreas] = useState(null);
 
+    const [formDisabled, setFormDisabled] = useState(true);
+
     useEffect(() => {
         fetchFromApi("/owned/", setEditableBooks);
     }, []);
@@ -37,10 +39,10 @@ export default function EditFeature(){
             <Form style={{ margin: 'auto'}}>
                 <BookSelector setEditableAreas={setEditableAreas} editableBooks={editableBooks} />
 
-                <AreaSelector formData={formData} setFormData={setFormData} editableAreas={editableAreas} />
+                <AreaSelector onChange={() => setFormDisabled(false)} formData={formData} setFormData={setFormData} editableAreas={editableAreas} />
 
                 <Form.Group className="mb-3" controlId="feature_name">
-                    <Form.Label>Feature Name</Form.Label>
+                    <Form.Label>Feature Name*</Form.Label>
                     <Form.Control type="text" placeholder="" 
                         onInput={e => {
                             let newData = formData;
@@ -86,6 +88,7 @@ export default function EditFeature(){
                 <Button 
                     variant="primary" 
                     type="submit"
+                    disabled={formDisabled}
                     onClick={e => {
                         e.preventDefault();
 

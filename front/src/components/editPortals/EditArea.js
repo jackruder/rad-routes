@@ -23,6 +23,8 @@ export default function EditArea(){
 
     const [nameBg, setNameBg] = useState(null);
 
+    const [formDisabled, setFormDisabled] = useState(true);
+
     useEffect(() => {
         fetchFromApi("/owned/", setEditableBooks);
     }, [])
@@ -33,7 +35,7 @@ export default function EditArea(){
             {editableBooks.length > 0 ?
             <Container>
                 <Form style={{ margin: 'auto'}}>
-                    <BookSelector formData={formData} setFormData={setFormData} editableBooks={editableBooks} />
+                    <BookSelector onChange={() => setFormDisabled(false)} formData={formData} setFormData={setFormData} editableBooks={editableBooks} />
 
                     <Form.Group className="mb-3" controlId="area">
                         <Form.Label>Area Name*</Form.Label>
@@ -44,12 +46,14 @@ export default function EditArea(){
                             onInput={e => {
                                 if(e.target.value === ""){
                                     setNameBg(formFieldErrorRed);
+                                    setFormDisabled(true);
                                 }
                                 else{
                                     setNameBg(null);
                                     let newData = formData;
                                     newData.area_name = e.target.value;
                                     setFormData(newData);
+                                    setFormDisabled(false);
                                 }
                             }}
                         />
@@ -69,8 +73,11 @@ export default function EditArea(){
                     <Button 
                         variant="primary" 
                         type="submit"
+                        disabled={formDisabled}
                         onClick={e => {
                             e.preventDefault();
+
+                            console.log(formData);
 
                             if(formData.area_name === null){
                                 setNameBg(formFieldErrorRed);
@@ -91,10 +98,20 @@ export default function EditArea(){
                                 body: JSON.stringify(formData)
                             })
                             .then(res => {
-                                if(!res.ok && res.status >= 500){
-                                    throw Error(res.statusText);
+                                const contentType = res.headers.get("content-type");
+                                if (contentType && contentType.indexOf("application/json") !== -1) {
+                                    return res.json().then(data => {
+                                        if(Object.keys(data).indexOf('detail') >= 0){
+                                            throw Error(data.detail);
+                                        }
+                                        else{
+                                            throw Error(JSON.stringify(data))
+                                        }
+                                    });
                                 }
-                                return res.json();
+                                if(res.ok){
+                                    return res.json();
+                                }
                             })
                             .then(data => {
                                 console.log(data);

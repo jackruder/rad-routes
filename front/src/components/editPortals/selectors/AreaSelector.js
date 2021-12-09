@@ -5,12 +5,12 @@ import { selectorSize, selectorStyle } from '../../EditPortal';
 
 import Form from 'react-bootstrap/Form';
 
-export default function AreaSelector({ formData, setFormData, editableAreas, setEditableFeatures }){
+export default function AreaSelector({ onChange, formData, setFormData, editableAreas, setEditableFeatures }){
     return (
         editableAreas ? <>
             { editableAreas.length > 0 ?
             <Form.Group className="mb-3">
-                <Form.Label>Area</Form.Label>
+                <Form.Label>Area*</Form.Label>
                 <Form.Select
                     style={selectorStyle}
                     size={selectorSize}
@@ -23,6 +23,10 @@ export default function AreaSelector({ formData, setFormData, editableAreas, set
                         
                         if(setEditableFeatures){
                             fetchFromApi(`/areas/${e.target.value}/features`, setEditableFeatures);
+                        }
+
+                        if (typeof onChange === 'function'){
+                            onChange();
                         }
                     }}
                     defaultValue={"default"}

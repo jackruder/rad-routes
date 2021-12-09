@@ -4,12 +4,12 @@ import { selectorSize, selectorStyle } from '../../EditPortal';
 
 import Form from 'react-bootstrap/Form';
 
-export default function AreaSelector({ formData, setFormData, editableFaces }){
+export default function FaceSelector({ onChange, formData, setFormData, editableFaces }){
     return (
         editableFaces ? <>
             { editableFaces.length > 0 ?
             <Form.Group className="mb-3">
-                <Form.Label>Face</Form.Label>
+                <Form.Label>Face*</Form.Label>
                 <Form.Select
                     style={selectorStyle}
                     size={selectorSize}
@@ -18,6 +18,10 @@ export default function AreaSelector({ formData, setFormData, editableFaces }){
                             let newData = formData;
                             newData.face = e.target.value;
                             setFormData(newData);
+                        }
+
+                        if (typeof onChange === 'function'){
+                            onChange();
                         }
                     }}
                     defaultValue={"default"}

@@ -30,6 +30,8 @@ export default function EditClimb(){
     const [editableFeatures, setEditableFeatures] = useState(null);
     const [editableFaces, setEditableFaces] = useState(null);
 
+    const [formDisabled, setFormDisabled] = useState(true);
+
     useEffect(() => {
         fetchFromApi(`/owned/`, setEditableBooks);
     }, [])
@@ -46,10 +48,10 @@ export default function EditClimb(){
 
                 <FeatureSelector editableFeatures={editableFeatures} setEditableFaces={setEditableFaces} />
 
-                <FaceSelector formData={formData} setFormData={setFormData} editableFaces={editableFaces} />
+                <FaceSelector onChange={() => setFormDisabled(false)} formData={formData} setFormData={setFormData} editableFaces={editableFaces} />
 
                 <Form.Group className="mb-3" controlId="climb_name">
-                    <Form.Label>Climb Name</Form.Label>
+                    <Form.Label>Climb Name*</Form.Label>
                     <Form.Control type="text" placeholder="" 
                         onInput={e => {
                             let newData = formData;
@@ -81,24 +83,11 @@ export default function EditClimb(){
                     />
                 </Form.Group>
 
-                {/* <Form.Group className="mb-3" controlId="face_id">
-                    <Form.Label>Face</Form.Label>
-                    <Form.Control type="text" placeholder="" 
-                        onInput={e => {
-                            let newData = formData;
-                            newData.face_id = e.target.value;
-                            setFormData(newData);
-                        }}
-                    />
-                </Form.Group> */}
-
                 <Form.Group className="mb-3" controlId="height">
                     <Form.Label>Height (m)</Form.Label>
                     <Form.Control type="text" placeholder="" 
                         onInput={e => {
-
-                            if((Number.isInteger(parseInt(e.target.value))) || (e.target.value == "")){
-
+                            if((Number.isInteger(parseInt(e.target.value))) || (e.target.value === "")){
                                 let newData = formData;
                                 newData.height = parseInt(e.target.value);
                                 setFormData(newData);
@@ -135,6 +124,7 @@ export default function EditClimb(){
                 <Button 
                     variant="primary" 
                     type="submit"
+                    disabled={formDisabled}
                     onClick={e => {
                         e.preventDefault();
 
