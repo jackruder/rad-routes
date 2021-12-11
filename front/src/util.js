@@ -8,7 +8,7 @@ export const getAuth = () => {
     return null;
 }
 
-export const apiUrlBase = process.env.NODE_ENV === 'production' ? window.location.host : 'http://localhost:8000/api';
+export const apiUrlBase = process.env.NODE_ENV === 'production' ? `http://${window.location.host}/api` : 'http://localhost:8000/api';
 
 export const formFieldErrorRed = "#f99";
 
