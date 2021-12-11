@@ -150,12 +150,14 @@ export default function EditClimb(){
                                         throw Error(data.detail);
                                     }
                                     else{
+                                        let err;
                                         try{
-                                            throw Error(JSON.stringify(data));
+                                            err = JSON.stringify(data);
                                         }
                                         catch(e){
                                             throw Error("unknown error");
                                         }
+                                        throw Error(err);
                                     }
                                 });
                             }
