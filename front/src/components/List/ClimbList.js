@@ -39,7 +39,16 @@ export default function ClimbList({ loggedIn, faceId, onPage }){
                         justifyContent: 'center'
                     }}
                 >
-                    <ClimbCard onPage={onPage} data={climb}/>
+                    <ClimbCard
+                        onPage={onPage}
+                        data={climb}
+                        loggedIn={loggedIn}
+                        deleteThis={() => {
+                            let newList = climbList.slice();
+                            newList.splice(idx, 1);
+                            setClimbList(newList);
+                        }}
+                    />
                 </Col>
             ))}
         </Row>

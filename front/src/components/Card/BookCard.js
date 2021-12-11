@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { fetchFromApi } from '../../util';
+import { getAuth, apiUrlBase, fetchFromApi } from '../../util';
 
+import Swal from 'sweetalert2';
+
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
 const defaultAuthorObj = {
@@ -11,7 +14,7 @@ const defaultAuthorObj = {
   last_name: ""
 }
 
-export default function Book({ data }) {
+export default function Book({ data, deleteThis, loggedIn }) {
   const bookObj = data;
   const navigate = useNavigate();
   const [authorObj, setAuthorObj] = useState(defaultAuthorObj);
@@ -38,7 +41,69 @@ export default function Book({ data }) {
           <Card.Text style={{ marginTop: '1rem' }}>{bookObj.book_description}</Card.Text>
           Best Quality: <b>{bookObj.quality_max}</b> <br/>
           <Card.Text>by {authorObj.username}</Card.Text>
+          { typeof deleteThis === 'function' && loggedIn ?
+          <Button variant="danger"
+            onClick={e => {
+              e.stopPropagation();
+              Swal.fire({
+                icon: 'warning',
+                title: `Are you sure you want to delete "${bookObj.book_name}"?`,
+                text: `Type "${bookObj.book_name}" to confirm.`,
+                showCancelButton: true,
+                focusCancel: true,
+                confirmButtonText: `Delete ${bookObj.book_name}`,
+                confirmButtonColor: '#f33',
+                input: 'text',
+                inputAttributes: {
+                  autocapitalize: 'off'
+                }
+              }).then(result => {
+                if(result.isConfirmed && result.value === bookObj.book_name){
+                  console.log(bookObj);
+    
+                  const token = getAuth();
+                  const headers = token ? {
+                      "Authorization": `Token ${token}`
+                  } : {};
+    
+                  fetch(`${apiUrlBase}/books/${bookObj.book_id}`, {
+                    method: 'DELETE',
+                    headers: headers
+                  })
+                  .then(res => {
+                    if(res.ok){
+                      console.log(res.text, bookObj);
+        
+                      try{
+                        Swal.fire({
+                          icon: 'success',
+                          text: `successfully deleted ${bookObj.book_name}`
+                        });
+                      }
+                      catch(e){
+                        console.log(e);
+                      }
+        
+                      deleteThis();
+                    }
+                    else{
+                      throw Error("Could not delete this book. Are you sure you own it?");
+                    }
+                  })
+                  .catch(e => {
+                    Swal.fire({
+                      icon: 'error',
+                      text: e
+                    })
+                  })
+                }
+              })
+            }}
+          >
+            Delete
+          </Button>
+          : <></>}
         </Card.Body>
-    </Card> : <>This Climb Does Not Exist</>
+    </Card> : <>This Book Does Not Exist</>
   )
 }

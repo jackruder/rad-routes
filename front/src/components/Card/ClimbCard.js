@@ -1,6 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Swal from 'sweetalert2';
+
+import { getAuth, apiUrlBase } from '../../util';
+
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 
 const getHeightString = (height) => {
@@ -20,7 +25,7 @@ const images = {
   "In-N-Out": "/static/assets/in-n-out.png"
 }
 
-export default function Climb({ data, onPage }) {
+export default function Climb({ data, onPage, deleteThis, loggedIn }) {
   const climbObj = data;
   const navigate = useNavigate();
 
@@ -54,10 +59,62 @@ export default function Climb({ data, onPage }) {
       <Card.Body>
           <Card.Title style={{ marginTop: '1rem' }}>Description</Card.Title>
           <Card.Text> {climbObj.description} </Card.Text>
-          <Card.Title>Getting There</Card.Title>
-          <Card.Text>
-            Vitae alias aperiam. A autem temporibus veritatis minima dolore deserunt.
-          </Card.Text>
+          { typeof deleteThis === 'function' && loggedIn ?
+          <Button variant="danger"
+            onClick={() => {
+              Swal.fire({
+                icon: 'warning',
+                title: `Are you sure you want to delete "${climbObj.climb_name}"?`,
+                showCancelButton: true,
+                focusCancel: true,
+                confirmButtonText: `Delete ${climbObj.climb_name}`,
+                confirmButtonColor: '#f33'
+              }).then(result => {
+                if(result.isConfirmed){
+                  console.log(climbObj);
+    
+                  const token = getAuth();
+                  const headers = token ? {
+                      "Authorization": `Token ${token}`
+                  } : {};
+    
+                  fetch(`${apiUrlBase}/climbs/${climbObj.climb_id}`, {
+                    method: 'DELETE',
+                    headers: headers
+                  })
+                  .then(res => {
+                    if(res.ok){
+                      console.log(res.text, climbObj);
+        
+                      try{
+                        Swal.fire({
+                          icon: 'success',
+                          text: `successfully deleted ${climbObj.climb_name}`
+                        });
+                      }
+                      catch(e){
+                        console.log(e);
+                      }
+        
+                      deleteThis();
+                    }
+                    else{
+                      throw Error("Could not delete this climb. Are you sure you own it?");
+                    }
+                  })
+                  .catch(e => {
+                    Swal.fire({
+                      icon: 'error',
+                      text: e
+                    })
+                  })
+                }
+              });
+            }}
+          >
+            Delete
+          </Button>
+          : <></>}
       </Card.Body>
     </Card> : <>This Climb Does Not Exist</>
   )

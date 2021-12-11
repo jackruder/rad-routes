@@ -38,7 +38,16 @@ export default function BookList({ loggedIn, featureId, onPage }){
                         justifyContent: 'center'
                     }}
                 >
-                    <FaceCard onPage={onPage} data={face}/>
+                    <FaceCard
+                        onPage={onPage}
+                        data={face}
+                        loggedIn={loggedIn}
+                        deleteThis={() => {
+                            let newList = faceList.slice();
+                            newList.splice(idx, 1);
+                            setFaceList(newList);
+                        }}
+                    />
                 </Col>
             ))}
         </Row>

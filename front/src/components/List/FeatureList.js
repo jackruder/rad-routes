@@ -39,7 +39,16 @@ export default function BookList({ loggedIn, areaId, onPage }){
                         justifyContent: 'center'
                     }}
                 >
-                    <FeatureCard data={feature} onPage={onPage}/>
+                    <FeatureCard
+                        data={feature}
+                        onPage={onPage}
+                        loggedIn={loggedIn}
+                        deleteThis={() => {
+                            let newList = featureList.slice();
+                            newList.splice(idx, 1);
+                            setFeatureList(newList);
+                        }}
+                    />
                 </Col>
             ))}
         </Row>

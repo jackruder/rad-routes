@@ -39,7 +39,16 @@ export default function AreaList({ loggedIn, bookId, onPage }){
                         justifyContent: 'center'
                     }}
                 >
-                    <AreaCard data={area} onPage={onPage}/>
+                    <AreaCard
+                        data={area}
+                        onPage={onPage}
+                        loggedIn={loggedIn}
+                        deleteThis={() => {
+                            let newList = areaList.slice();
+                            newList.splice(idx, 1);
+                            setAreaList(newList);
+                        }}
+                    />
                 </Col>
             ))}
         </Row>

@@ -25,7 +25,15 @@ export default function BookList({ loggedIn }){
                         justifyContent: 'center'
                     }}
                 >
-                    <BookCard data={book}/>
+                    <BookCard
+                        data={book}
+                        loggedIn={loggedIn}
+                        deleteThis={() => {
+                            let newList = bookList.slice();
+                            newList.splice(idx, 1);
+                            setBookList(newList);
+                        }}
+                    />
                 </Col>
             ))}
         </Row>
