@@ -84,31 +84,50 @@ export default function EditBook(){
                             headers: headers,
                             body: JSON.stringify(formData)
                         })
-                        .then(res => res.json())
+                        .then(res => {
+                            if(res.ok){
+                                return res.json();
+                            }
+                            const contentType = res.headers.get("content-type");
+                            if (contentType && contentType.indexOf("application/json") !== -1) {
+                                return res.json().then(data => {
+                                    if(Object.keys(data).indexOf('detail') >= 0){
+                                        throw Error(data.detail);
+                                    }
+                                    else{
+                                        try{
+                                            throw Error(JSON.stringify(data));
+                                        }
+                                        catch(e){
+                                            throw Error("unknown error");
+                                        }
+                                    }
+                                });
+                            }
+                        })
                         .then(data => {
                             console.log(data);
-                            let err = false;
-                            for(let key of Object.keys(formData)){
-                                if(Object.keys(data).indexOf(key) >= 0){
-                                    if(Object.prototype.toString.call(data[key]) === "[object Array]"){
-                                        err = true;
-                                        // errorSetters[key](data[key][0]);
-                                    }
-                                }
-                                // else if (Object.keys(errorSetters).indexOf(key) >= 0){
-                                //     errorSetters[key]("");
-                                // }
+
+                            if(Object.keys(data).indexOf('detail') >= 0){
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: data.detail
+                                });
                             }
-                            if(!err){
+                            else {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Book Created',
-                                    text: `Successfully created ${formData.book_name}`
+                                    text: `Successfully created book ${formData.book_name}`
                                 });
                             }
                         })
                         .catch(e => {
                             console.log(e);
+                            Swal.fire({
+                                icon: 'error',
+                                text: e
+                            })
                         });
                     }}
                 >

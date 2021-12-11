@@ -104,10 +104,25 @@ export default function EditFeature(){
                             body: JSON.stringify(formData)
                         })
                         .then(res => {
-                            if(!res.ok && res.status >= 500){
-                                throw Error(res.statusText);
+                            if(res.ok){
+                                return res.json();
                             }
-                            return res.json();
+                            const contentType = res.headers.get("content-type");
+                            if (contentType && contentType.indexOf("application/json") !== -1) {
+                                return res.json().then(data => {
+                                    if(Object.keys(data).indexOf('detail') >= 0){
+                                        throw Error(data.detail);
+                                    }
+                                    else{
+                                        try{
+                                            throw Error(JSON.stringify(data));
+                                        }
+                                        catch(e){
+                                            throw Error("unknown error");
+                                        }
+                                    }
+                                });
+                            }
                         })
                         .then(data => {
                             console.log(data);
@@ -128,6 +143,10 @@ export default function EditFeature(){
                         })
                         .catch(e => {
                             console.log(e);
+                            Swal.fire({
+                                icon: 'error',
+                                text: e
+                            })
                         });
                     }}
                 >

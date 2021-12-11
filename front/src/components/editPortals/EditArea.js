@@ -98,6 +98,9 @@ export default function EditArea(){
                                 body: JSON.stringify(formData)
                             })
                             .then(res => {
+                                if(res.ok){
+                                    return res.json();
+                                }
                                 const contentType = res.headers.get("content-type");
                                 if (contentType && contentType.indexOf("application/json") !== -1) {
                                     return res.json().then(data => {
@@ -105,12 +108,14 @@ export default function EditArea(){
                                             throw Error(data.detail);
                                         }
                                         else{
-                                            throw Error(JSON.stringify(data))
+                                            try{
+                                                throw Error(JSON.stringify(data));
+                                            }
+                                            catch(e){
+                                                throw Error("unknown error");
+                                            }
                                         }
                                     });
-                                }
-                                if(res.ok){
-                                    return res.json();
                                 }
                             })
                             .then(data => {
