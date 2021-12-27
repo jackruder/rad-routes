@@ -31,6 +31,22 @@ class FaceSerializer(serializers.ModelSerializer):
         )
 
 
+class WholeFaceSerializer(serializers.ModelSerializer):
+
+    climbs = ClimbSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Face
+        fields = (
+            "face_id",
+            "face_name",
+            "face_description",
+            "feature",
+            "image",  # WHAT DO WE DOOO
+            "climbs",
+        )
+
+
 class FeatureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feature
@@ -44,10 +60,59 @@ class FeatureSerializer(serializers.ModelSerializer):
         )
 
 
+class WholeFeatureSerializer(serializers.ModelSerializer):
+    faces = WholeFaceSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Feature
+        fields = (
+            "feature_id",
+            "feature_name",
+            "feature_description",
+            "gps",
+            "location",
+            "area",
+            "faces",
+        )
+
+
 class AreaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Area
         fields = ("area_id", "area_name", "area_quality", "area_description", "book")
+
+
+class WholeAreaSerializer(serializers.ModelSerializer):
+    features = WholeFeatureSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Area
+        fields = (
+            "area_id",
+            "area_name",
+            "area_quality",
+            "area_description",
+            "book",
+            "features",
+        )
+
+
+class WholeBookSerializer(serializers.ModelSerializer):
+    areas = WholeAreaSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Book
+        fields = (
+            "book_id",
+            "book_name",
+            "book_description",
+            "author",
+            "public",
+            "listed",
+            "quality_max",
+            "grade_hist",
+            "areas",
+        )
 
 
 class BookSerializer(serializers.ModelSerializer):

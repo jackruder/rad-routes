@@ -138,7 +138,6 @@ class AreaEditPermissions(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
 
-
 class UserPrivateAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
