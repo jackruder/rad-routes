@@ -72,13 +72,13 @@ class Area(models.Model):
     area_description = models.TextField(
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
     )
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="book")
 
     def __str__(self):
         return "%s" % (self.area_name)
 
     def containing_book(self):
-        return self.book_id
+        return self.book
 
 
 class Feature(models.Model):
@@ -89,7 +89,7 @@ class Feature(models.Model):
     location = models.TextField(
         null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
     )
-    area = models.ForeignKey(Area, on_delete=models.CASCADE)
+    area = models.ForeignKey(Area, on_delete=models.CASCADE, related_name="area")
 
     def __str__(self):
         return "%s" % (self.feature_name)
@@ -99,9 +99,13 @@ class Face(models.Model):
     face_id = models.AutoField(primary_key=True)
     face_name = models.TextField(max_length=NAME_MAX_LENGTH)
     face_description = models.TextField(
-        null=True, blank=True, max_length=DESCRIPTION_MAX_LENGTH
+        null=True,
+        blank=True,
+        max_length=DESCRIPTION_MAX_LENGTH,
     )
-    feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
+    feature = models.ForeignKey(
+        Feature, on_delete=models.CASCADE, related_name="feature"
+    )
     image = models.URLField(
         null=True, blank=True
     )  # PILLOW needs to be installed for this to work
@@ -117,7 +121,7 @@ class Climb(models.Model):
     )  # max length is a concern for exploitation not formatting, so the number is fairly high
     climb_type = models.TextField(null=True, blank=True, max_length=50)
     face = models.ForeignKey(
-        Face, null=True, blank=True, on_delete=models.CASCADE
+        Face, null=True, blank=True, on_delete=models.CASCADE, related_name="face"
     )  # TODO rewrite this so upon deletion they get added to default face
     grade = models.TextField(null=True, blank=True, max_length=20)
     quality = models.IntegerField(
@@ -138,6 +142,7 @@ class AreaEditPermissions(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     area_id = models.ForeignKey(Area, on_delete=models.CASCADE)
 
+
 class UserPrivateAccess(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -147,8 +152,8 @@ class UserPrivateAccess(models.Model):
 
 
 class UserLibrary(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="libuser")
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="libbook")
 
     def __str__(self):
         return "%s library" % (self.user_id.__str__())

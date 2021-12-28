@@ -23,6 +23,9 @@ from .serializers import (
     UserSignupSerializer,
     UserPublicSerializer,
     UserPrivateSerializer,
+    WholeBookSerializer,
+    WholeAreaSerializer,
+    WholeFeatureSerializer,
 )
 from .models import (
     Climb,
@@ -452,6 +455,23 @@ class RetrieveUpdateDestroyAllBook(RetrieveUpdateDestroyAPIView):
                     [self.request.user.id, self.request.user.id],
                 )
                 return Book.objects.filter(book_id__in=[x.book_id for x in b])
+
+
+class BookData(GenericAPIView, mixins.ListModelMixin, mixins.RetrieveModelMixin):
+    """gets a book and all of its accompanying data"""
+
+    permission_classes = [BookPermissions]
+
+    serializer_class = WholeBookSerializer
+
+    def get_queryset(self):
+        if self.request.user.is_superuser:
+            return Book.objects.all()
+        else:
+            if not self.request.user.is_authenticated:
+                return Book.objects.filter(public=True)
+            else:
+                pass  # TODO
 
 
 #
